@@ -1,11 +1,11 @@
-var app = require('app').default
-var Plugin = require('plugin').default;
+import app from 'app';
 
-app.register('.sticky', function (view) {
+
+app.register('.sticky', view => {
 
   var top = view.css('top');
 
-  view.on('scroll', function() {
+  view.on('scroll', () => {
 
     if (view.rect().top <= top) {
       view.css({
@@ -15,5 +15,6 @@ app.register('.sticky', function (view) {
     }
 
   });
+
 });
 
