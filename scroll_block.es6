@@ -1,7 +1,7 @@
 import log          from 'log';
 import dom          from 'dom';
 
-import Plugin       from './plugin';
+import Plugin       from 'plugin';
 
 var events = {
   onscreen: 'fix',
