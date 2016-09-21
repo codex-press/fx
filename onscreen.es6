@@ -1,7 +1,7 @@
-import app    from 'app';
-import Plugin from 'plugin';
+import article from 'article';
+import Plugin  from 'plugin';
 
-app.register('.onscreen', class Onscreen extends Plugin {
+article.register('.onscreen', class Onscreen extends Plugin {
 
   initialize() {
     this.removeClass('onscreen');
