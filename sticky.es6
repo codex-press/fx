@@ -18,7 +18,7 @@ class Sticky extends DomWrapper() {
 
 
   resize() {
-    console.log('resize');
+    //console.log('resize');
     this.state = undefined;
     this.css({position: '', top: '', left: ''});
     this.style = this.css('top right bottom left marginTop marginLeft');
