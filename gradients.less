@@ -1,3 +1,20 @@
+/* utilitaian classes for rotating the gradients by degrees */
+
+@rotatedeg: 1deg;
+@xdeg : 90deg * @rotatedeg;
+
+.rotate45 {
+  @rotatedeg: 0.5;
+}
+
+.rotate180 {
+  @rotatedeg: 2;
+}
+
+
+
+/////////////////////////////////
+
 .warm.gradient {
   background-color: crimson;
   background-image: linear-gradient(
@@ -15,15 +32,17 @@
   background-image: linear-gradient(
     violet, hsl(220, 100%, 80%));
 }
-/* duochromes  */
 
+/* duochromes  */
+/*
 .bluie.gradient{
   background-color: violete;
   background-image: linear-gradient(
+    @xdeg,
     hsla(295, 45%, 20%, 1),
     hsla(240, 90%, 60%, 1));
 }
-
+*/
 .pinklimo.gradient{
   background-color: violete;
   background-image: linear-gradient(
