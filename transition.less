@@ -1,0 +1,97 @@
+
+.fade {
+  opacity: 0;
+}
+.fade.onscreen {
+  opacity: 1;
+  transition: opacity 1s;
+}
+
+
+.zoom {
+  opacity: 0;    
+  transform: scale(.9); 
+}
+.zoom.onscreen {
+  opacity: 1;    
+  transform: scale(1);
+  transition: transform 1s, opacity 1s;
+}
+
+
+.slide-up {
+  opacity: 0;    
+  transform: translateY(100px);
+}
+.slide-up.onscreen {
+  opacity: 1;    
+  transform: none;
+  transition: transform 1s, opacity 1s;
+}
+
+.slide-down {
+  opacity: 0;
+  transform: translateY(-100px);
+}
+.slide-down.onscreen {
+  opacity: 1;    
+  transform: none;
+  transition: transform 1s, opacity 1s;
+}
+
+.slide-right {
+  opacity: 0;    
+  transform: translateX(100px);
+}
+.slide-right.onscreen {
+  opacity: 1;    
+  transform: none;
+  transition: transform 1s, opacity 1s;
+}
+
+
+.slide-left {
+  opacity: 0;    
+  transform: translateX(-100px);
+}
+.slide-left.onscreen {
+  opacity: 1;    
+  transform: none;
+  transition: transform 1s, opacity 1s;
+}
+
+
+
+// Duration
+// --------
+
+// :not(.fake) is a hack to raise specificity of these to raise above
+// default
+
+.faster.onscreen { transition-duration: .3s; }
+.fast.onscreen   { transition-duration: .5s; }
+// default is 1 sec set above
+.slow.onscreen   { transition-duration: 2s; }
+.slower.onscreen { transition-duration: 3s; }
+
+
+
+// Easing
+// ------
+
+// ease is default
+.ease-in.onscreen     { transition-timing-function: ease-in; }
+.ease-out.onscreen    { transition-timing-function: ease-out; }
+.ease-in-out.onscreen { transition-timing-function: ease-in-out; }
+.linear.onscreen      { transition-timing-function: linear; }
+
+
+// Delay
+// -----
+
+// no-delay is the stufff 
+.short-delay.onscreen  { transition-delay: 0.25s; }
+.delay.onscreen        { transition-delay: 1s; }
+.long-delay.onscreen   { transition-delay: 1.5s; }
+.longer-delay.onscreen { transition-delay: 2s; }
+

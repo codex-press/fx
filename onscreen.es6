@@ -1,18 +1,16 @@
 import article from 'article';
-import Plugin  from 'plugin';
+import Plugin from 'plugin';
+
 
 article.register('.onscreen', class Onscreen extends Plugin {
 
-  initialize() {
+  constructor(args) {
+    super(args);
     this.removeClass('onscreen');
-  }
-
-  onscreen() {
-    this.addClass('onscreen');
-  }
-
-  offscreen() {
-    this.removeClass('onscreen');
+    this.bind({
+      onscreen: rect => this.addClass('onscreen'),
+      offscreen: rect => this.removeClass('onscreen'),
+    });
   }
 
 });
