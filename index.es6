@@ -1,3 +1,4 @@
 
 import './sticky';
+import './transition';
 

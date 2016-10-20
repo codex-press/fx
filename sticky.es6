@@ -96,11 +96,11 @@ class Sticky extends DomWrapper() {
 }
 
 
-
 article.ready.then(() => {
 
   let test = document.createElement('div');
   
+
   test.style.position = 'sticky';
   if (test.style.position === 'sticky')
     return;
@@ -113,6 +113,7 @@ article.ready.then(() => {
 
   Polyfill({declarations: ['position:sticky']})
   .doMatched(rules => rules.each(r => {
+    console.log(r);
     stickies = stickies.concat(
       dom(r.getSelectors()).map(el => new Sticky(el))
     );
@@ -130,5 +131,4 @@ article.ready.then(() => {
   article.on('scroll', () => stickies.map(s => s.scroll()));
   article.on('resize', () => stickies.map(s => s.resize()));
 });
-
 

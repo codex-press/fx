@@ -8,9 +8,20 @@ article.register('.onscreen', class Onscreen extends Plugin {
     super(args);
     this.removeClass('onscreen');
     this.bind({
-      onscreen: rect => this.addClass('onscreen'),
+      onscreen: rect => {
+        if (article.hasState('focus'))
+          this.addClass('onscreen');
+      },
       offscreen: rect => this.removeClass('onscreen'),
     });
+
+    article.on('focus', () => {
+      this.removeClass('onscreen');
+      let rect = this.rect();
+      if (rect.top <= window.innerHeight && rect.bottom >= 0)
+        this.addClass('onscreen');
+    });
+
   }
 
 });
