@@ -113,7 +113,7 @@ article.ready.then(() => {
 
   Polyfill({declarations: ['position:sticky']})
   .doMatched(rules => rules.each(r => {
-    console.log(r);
+    // console.log(r);
     stickies = stickies.concat(
       dom(r.getSelectors()).map(el => new Sticky(el))
     );

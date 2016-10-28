@@ -6,22 +6,36 @@ article.register('.onscreen', class Onscreen extends Plugin {
 
   constructor(args) {
     super(args);
-    this.removeClass('onscreen');
     this.bind({
-      onscreen: rect => {
-        if (article.hasState('focus'))
-          this.addClass('onscreen');
-      },
-      offscreen: rect => this.removeClass('onscreen'),
+      onscreen: 'onscreen',
+      offscreen: 'offscreen',
     });
+    this.bind({focus: 'focus'}, article);
+  }
 
-    article.on('focus', () => {
-      this.removeClass('onscreen');
-      let rect = this.rect();
-      if (rect.top <= window.innerHeight && rect.bottom >= 0)
-        this.addClass('onscreen');
-    });
 
+  onscreen(rect) {
+    if (article.hasState('focus'))
+      this.addClass('onscreen');
+  }
+
+
+  offscreen(rect) {
+    this.removeClass('onscreen');
+  }
+
+
+  focus() {
+
+    if (!this.is('.onscreen'))
+      return;
+
+    this.removeClass('onscreen');
+    // trigger reflow
+    void this.el.offsetHeight;
+    let rect = this.rect();
+    if (rect.top <= window.innerHeight && rect.bottom >= 0)
+      this.addClass('onscreen');
   }
 
 });
