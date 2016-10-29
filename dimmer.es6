@@ -27,8 +27,10 @@ article.register('.dimmer', class Dimmer extends Plugin {
 
 
   resize(rect = this.rect()) {
-    dom.setCSS(this.mask, {height: rect.height + (2 * window.innerHeight)});
-    dom.setTransform(this.mask, {y: -(rect.height + window.innerHeight)});
+    dom.setCSS(this.mask, {height: 4 * window.innerHeight});
+    dom.setTransform(this.mask, {
+      y: -(rect.height/2 + 2 * window.innerHeight)
+    });
   }
 
 
