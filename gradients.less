@@ -1,5 +1,84 @@
-/* utilitaian classes for rotating the gradients by degrees */
 
+.gradient.translucent {
+  opacity: 0.5;
+}
+
+.gradient-parent {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient.fill {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.5;
+}
+
+.gradient.revolve {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  height: 200%;
+  width: 200%;
+  animation-name: gradient-revolve;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+}
+
+@keyframes gradient-revolve {
+  0%   { transform: scale(2) translate(-25%); }
+  30%   { transform: scale(2) translate(-25%, 25%); }
+  60%   { transform: scale(2) translate(25%); }
+	100% { transform: scale(2) translate(25%, -25%); }
+}
+
+
+.gradient.pan,
+.gradient.pan-vertical {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+.gradient.pan {
+  animation-name: gradient-pan;
+}
+@keyframes gradient-pan {
+  from { transform: scale(3,1) translateX(-33%); }
+  to   { transform: scale(3,1) translateX(33%); }
+}
+
+
+.gradient.pan-vertical {
+  animation-name: gradient-pan-vertical;
+}
+
+@keyframes gradient-pan-vertical {
+  from { transform: scale(1,3) translateY(-33%); }
+  to   { transform: scale(1,3) translateY(33%); }
+}
+
+
+.gradient.slow {
+  animation-duration: 3s;
+}
+
+.gradient.slower {
+  animation-duration: 4s;
+}
+
+
+// mixin to generate all styles with given rotation
 .gradients(@sel, @deg) {
 
   .warm.gradient@{sel} {
@@ -66,8 +145,6 @@
       hsla(250, 050%, 55%, 1));
   }
 
-  /*       */
-
   .toxic-dew.gradient@{sel}{
     background-image: linear-gradient(@deg
       hsl(75, 100%, 50%), 
@@ -93,52 +170,33 @@
     background-image: repeating-linear-gradient(@deg 
       hsla(15, 90%, 10%, 1) 0%,
       hsla(15, 100%, 15%, 1) 20%);
-
-  }
-
-  .color-rings.gradient@{sel} {
-    background-image: radial-gradient(@deg
-      hsla(0, 100%, 50%, 1),
-      hsla(10, 100%, 50%, 1),
-      hsla(15, 100%, 50%, 1),
-      hsla(20, 100%, 50%, 1),
-      hsla(25, 100%, 50%, 1),
-      hsla(30, 100%, 50%, 1),
-      hsla(0, 100%, 50%, 1),
-      hsla(40, 100%, 50%, 1),
-      hsla(0, 100%, 50%, 1),
-      hsla(50, 100%, 50%, 1),
-      hsla(0, 100%, 50%, 1))
   }
 
 }
 
-.gradients(~'', ~'');
+.gradients(~'', ~'0deg, ');
 .gradients(~'.rotate-45', ~'45deg,');
-.gradients(~'.rotate-180', ~'180deg,');
+.gradients(~'.rotate-90', ~'90deg,');
+.gradients(~'.rotate-135', ~'135deg,');
+.gradients(~'.rotate-180', ~'');
+.gradients(~'.rotate-225', ~'225deg,');
 .gradients(~'.rotate-270', ~'270deg,');
+.gradients(~'.rotate-315', ~'325deg,');
 
 
 
-/////////////////////////////////
-
-
-
-// How to use
-// ----------
-.gradient.fill {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  opacity: 0.5;
-}
-
-
-// so that the margin on stuff is included in the background when they add to
-// the <article>
-body > .gradient {
-  overflow: hidden;
+.color-rings.gradient {
+  background-image: radial-gradient(center, 
+    hsla(0, 100%, 50%, 1),
+    hsla(10, 100%, 50%, 1),
+    hsla(15, 100%, 50%, 1),
+    hsla(20, 100%, 50%, 1),
+    hsla(25, 100%, 50%, 1),
+    hsla(30, 100%, 50%, 1),
+    hsla(0, 100%, 50%, 1),
+    hsla(40, 100%, 50%, 1),
+    hsla(0, 100%, 50%, 1),
+    hsla(50, 100%, 50%, 1),
+    hsla(0, 100%, 50%, 1))
 }
 
