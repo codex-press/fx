@@ -99,7 +99,6 @@ class Sticky extends DomWrapper() {
 article.ready.then(() => {
 
   let test = document.createElement('div');
-  
 
   test.style.position = 'sticky';
   if (test.style.position === 'sticky')

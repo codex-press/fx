@@ -24,6 +24,29 @@
 .gradient.blend-color { mix-blend-mode: color; }
 .gradient.blend-luminosity { mix-blend-mode: luminosity; }
 
+
+// fallback for those is just 50% opacity
+html.no-mix-blend-mode {
+
+  .gradient.blend-multiply,
+  .gradient.blend-screen,
+  .gradient.blend-overlay,
+  .gradient.blend-darken,
+  .gradient.blend-lighten,
+  .gradient.blend-dodge,
+  .gradient.blend-burn,
+  .gradient.blend-hard,
+  .gradient.blend-soft,
+  .gradient.blend-difference,
+  .gradient.blend-exclusion,
+  .gradient.blend-hue,
+  .gradient.blend-saturation,
+  .gradient.blend-color,
+  .gradient.blend-luminosity {
+    opacity: 0.5
+  }
+}
+
 .gradient.text {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
