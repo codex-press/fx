@@ -108,7 +108,7 @@ article.ready.then(() => {
   if (test.style.position === `-${dom.prefix}-sticky`)
     return;
 
-  log('polyfilling position:sticky');
+  // log('polyfilling position:sticky');
 
   Polyfill({declarations: ['position:sticky']})
   .doMatched(rules => rules.each(r => {
