@@ -7,9 +7,15 @@ article.ready.then(() => {
 
   dom('.counter').map(el => {
 
-    let d = moment(el.textContent);
+    //let d = moment(el.textContent);
+    let d = moment(Date.now() + 10000);
 
     setInterval(() => {
+
+      if (d.diff(now, 'seconds') > 0)
+        dom(el).removeClass('up').addClass('down');
+      else
+        dom(el).removeClass('down').addClass('up');
 
       let now = Date.now();
       let years = d.diff(now, 'years');
@@ -25,7 +31,6 @@ article.ready.then(() => {
     }, 1000);
 
   });
-
 
 });
 
