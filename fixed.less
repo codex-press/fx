@@ -1,14 +1,17 @@
 
-figure.fixed {
-  height: 100vh;
-  width: initial;
-}
+html:not(.iOS) {
 
-figure.fixed .crop {
-  clip: rect(0,auto, auto,0);
-}
+  figure.fixed {
+    height: 100vh;
+    width: initial;
+  }
 
-figure.fixed img {
-  position: fixed !important;
-}
+  figure.fixed .crop {
+    clip: rect(0,auto, auto,0);
+  }
 
+  figure.fixed img {
+    position: fixed !important;
+  }
+
+}
