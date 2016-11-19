@@ -24,10 +24,12 @@ article.ready.then(() => {
       let minutes = d.diff(now, 'minutes') - (d.diff(now, 'hours')*60);
       let seconds = d.diff(now, 'seconds') - (d.diff(now, 'minutes')*60);
 
-      el.innerHTML = `
-        <span class=years>${years}</span><span class=days>${days}</span><span class=hours>${hours}</span><span class=minutes>${minutes}</span><span class=seconds>${seconds}</span>
-      `;
+      let html = '';
+      if (years)
+        html += `<span class=years>${years}</span>`;
+      html += `<span class=days>${days}</span><span class=hours>${hours}</span><span class=minutes>${minutes}</span><span class=seconds>${seconds}</span>`;
 
+      el.innerHTML = html;
     }, 1000);
 
   });
