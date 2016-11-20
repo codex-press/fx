@@ -19,7 +19,7 @@ let replace = function(old, nu) {
   }
 };
 
-        let meh=0;
+let s = (klas, chr) => `<span class=${klas}>${chr}</span>`;
 
 article.ready.then(() => {
   let time = performance.now();
@@ -28,25 +28,33 @@ article.ready.then(() => {
 
     let first = true;
     dom.textNodes(el).map(n => {
-      let index = (
+      let needsPush = (
         n.textContent.indexOf('‘') >= 0 ||
         n.textContent.indexOf('“') >= 0
       );
 
-      if (index >= 0) {
+      if (needsPush) {
+        let html = n.textContent;
 
-        let html = n.textContent.replace(/“/g, (match, offset, string) => {
-          if (first && /^\s*“/.test(string))
-            return '<span class=pull-double>“</span>';
-          else
-            return '<span class=push-double></span> <span class=pull-double>“</span>';
+        html = html.replace(/(^|\s)(“‘|‘“)/g, (m, p1, p2, offset, string) => {
+          if (first && /^\s*$/.test(string.slice(0, offset)))
+            return s('pull-triple', p2);
+          else if (/\s/.test(string.slice(offset - 1, offset)))
+            return s('push-triple','') + ' ' + s('pull-double', p2);
         });
 
-        html = html.replace(/‘/g, (match, offset, string) => {
-          if (first && /^\s*‘/.test(string))
-            return '<span class=pull-single>‘</span>';
+        html = html.replace(/(^|\s)“/g, (m, p1, offset, string) => {
+          if (first && /^\s*$/.test(string.slice(0, offset)))
+            return s('pull-double','“');
           else
-            return '<span class=push-single></span> <span class=pull-single>‘</span>';
+            return s('push-double','') + ' ' + s('pull-double','“')
+        });
+
+        html = html.replace(/(^|\s)‘/g, (m, p1, offset, string) => {
+          if (first && /^\s*$/.test(string.slice(0, offset)))
+            return s('pull-single','‘');
+          else
+            return s('push-single','') + ' ' + s('pull-single','‘')
         });
 
         replace(n, html);
@@ -57,8 +65,8 @@ article.ready.then(() => {
 
     });
 
-    // adding non-breaking space between two last words to prevent widowed 
-    // words
+    // adding non-breaking space between two last words to prevent 
+    // single-word lines (widowed words)
     dom.textNodes(el).reverse().find(n => {
       if (/[^\s]\s[^\s]/.test(n.textContent)) {
         n.textContent = n.textContent.replace(/(.*)\s([^\s])/, '$1\u00A0$2');
