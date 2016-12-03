@@ -39,8 +39,8 @@ article.register('.parallax', class Parallax extends Plugin {
       let slide = animate.circOut(0, window.innerHeight * .3);
       this.style.y = slide(time);
       let fade = animate.quintIn(1, 0.2);
-      console.log(this.index(), pos, fade(time));
-      this.css({opacity: fade(time)});
+      //console.log(this.index(), pos, fade(time));
+      // this.css({opacity: fade(time)});
       // cp.easing.easeOutCirc(time, 0, this.height * -0.1, 2),
       // opacity: cp.easing.easeInQuint(time, 1, -0.35, 1),
 
