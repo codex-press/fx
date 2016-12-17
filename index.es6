@@ -1,5 +1,5 @@
 
 import './sticky';
-import './scale_to_parent';
+import './fit-scale';
 import './transition';
 

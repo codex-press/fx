@@ -1,0 +1,110 @@
+@teal: #00b5ad;
+
+@mobilePx: 530px;
+@tabletPx: 950px;
+@laptopPx: 1200px;
+
+@mobile:  ~"(max-width: 530px)";
+@tablet:  ~"(min-width: 531px) and (max-width: 950px)";
+@laptop:  ~"(min-width: 951px) and (max-width: 1200px)";
+@desktop: ~"(min-width: 1201px)";
+
+
+// current one gets yellow color
+@activeColor: hsl(49, 74%, 60%);
+.mobile > .flex-readout .mobile { color: @activeColor }
+.tablet > .flex-readout .tablet { color: @activeColor }
+.laptop > .flex-readout .laptop { color: @activeColor }
+.desktop > .flex-readout .desktop { color: @activeColor }
+
+// set width to be to scale but not the whole width
+.flex-readout {
+  @multiplier: 0.4;
+  .mobile  { width: (@mobilePx * @multiplier); }
+  .tablet  { width: ((@tabletPx - @mobilePx) * @multiplier); }
+  .laptop  { width: ((@laptopPx - @tabletPx) * @multiplier); }
+  .desktop { width: 120px; }
+}
+
+// smaller on mobile and tablet
+@media @mobile {
+  @multiplier: 0.15;
+  .flex-readout {
+    .mobile  { width: (@mobilePx * @multiplier); }
+    .tablet  { width: ((@tabletPx - @mobilePx) * @multiplier); }
+    .laptop  { width: ((@laptopPx - @tabletPx) * @multiplier); }
+
+    .laptop { color: rgba(0, 0, 0, 0); }
+  }
+}
+@media @tablet {
+  @multiplier: 0.15;
+  .flex-readout {
+    .mobile  { width: (@mobilePx * @multiplier); }
+    .tablet  { width: ((@tabletPx - @mobilePx) * @multiplier); }
+    .laptop  { width: ((@laptopPx - @tabletPx) * @multiplier); }
+
+    .laptop { color: rgba(0, 0, 0, 0); }
+  }
+}
+
+.flex-readout {
+  display: inline-flex; 
+  position: relative;
+  background: #333;
+}
+.flex-readout div {
+  color: white;
+  cursor: pointer;
+  z-index: 5;
+  text-align: center;
+}
+.flex-readout {
+  .mobile, .tablet, .laptop {
+    border-right: 1px solid #eee;
+  }
+}
+
+.mobile, .tablet, .laptop, .desktop {
+  .flex-readout &:before {
+    content: attr(class);
+  }
+}
+
+
+
+.flex-readout .screen-size { 
+  position: absolute;
+  background: @teal;
+  height: 100%;
+  z-index: 3;
+}
+
+.flex {
+  position: relative;
+  margin-right: 6px !important;
+  border-left: 1px solid #777;
+  border-right: 2px dotted #777;
+}
+
+.flex-handle {
+  position: absolute;
+  top: 0;
+  right: -5px;
+  width: 10px !important;
+  height: 100%;
+  margin: 0 !important;
+
+  cursor: ew-resize;
+  z-index: 100;
+}
+
+
+.mobile .flex.wrap-mobile > * {
+  width: calc(100% - 1em);
+}
+.mobile .flex.wrap-tablet > *,
+.tablet .flex.wrap-tablet > * {
+  width: calc(100% - 1em);
+}
+
