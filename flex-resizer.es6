@@ -13,14 +13,14 @@ let readoutHTML = `
 `;
 
 let options = [
-  [530,      'mobile'],
-  [950,      'tablet'],
-  [1200,     'laptop'],
+  [450,      'mobile'],
+  [800,      'tablet'],
+  [1100,     'laptop'],
   [Infinity, 'desktop'],
 ];
 
 
-article.register('.flex', class ResizableFlex extends Plugin {
+article.register('.flex:not(.static)', class ResizableFlex extends Plugin {
 
   constructor(args) {
     super(args);
