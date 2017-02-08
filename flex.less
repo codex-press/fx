@@ -159,27 +159,30 @@
 .flex.responsive {
   & > * { flex: 0 0 auto; }
 
-  // like .one-column
-  @media @mobile {
-    & > * { width: calc(100% - 1em); }
-  }
-  // like .two-columns
-  @media @tablet {
-    & > *         { width: calc(50% - 1em); }
-    & > .span-two { width: calc(100% - 1em); }
-  }
-  // like .three-columns
-  @media @laptop {
-    & > *           { width: calc(33.33% - 1em); }
-    & > .span-two   { width: calc(66.66% - 1em); }
-    & > .span-three { width: calc(100% - 1em); }
-  }
   // like .four-columns
   @media @desktop {
     & > *           { width: calc(25% - 1em); }
     & > .span-two   { width: calc(50% - 1em); }
     & > .span-three { width: calc(75% - 1em); }
     & > .span-four  { width: calc(100% - 1em); }
+  }
+  // like .three-columns
+  @media @laptop {
+    & > *           { width: calc(33.33% - 1em); }
+    & > .span-two   { width: calc(66.66% - 1em); }
+    & > .span-three { width: calc(100% - 1em); }
+    & > .span-four  { width: calc(100% - 1em); }
+  }
+  // like .two-columns
+  @media @tablet {
+    & > *           { width: calc(50% - 1em); }
+    & > .span-two   { width: calc(100% - 1em); }
+    & > .span-three { width: calc(100% - 1em); }
+    & > .span-four  { width: calc(100% - 1em); }
+  }
+  // like .one-column
+  @media @mobile {
+    & > * { width: calc(100% - 1em); }
   }
 }
 
@@ -206,99 +209,193 @@
     }
 
     .flex.@{name}-two-columns {
-      & > *         { width: calc(50% - 1em); }
-      & > .span-two { width: calc(100% - 1em); }
+      & > *              { width: calc(50% - 1em); }
+      & > .span-two      { width: calc(100% - 1em); }
+      & > .span-three    { width: calc(100% - 1em); }
+      & > .span-four     { width: calc(100% - 1em); }
+      & > .span-five     { width: calc(100% - 1em); }
+      & > .span-six      { width: calc(100% - 1em); }
+      & > .span-seven    { width: calc(100% - 1em); }
+      & > .span-eight    { width: calc(100% - 1em); }
+      & > .span-nine     { width: calc(100% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-three-columns {
-      & > *           { width: calc(33.33% - 1em); }
-      & > .span-two   { width: calc(66.66% - 1em); }
-      & > .span-three { width: calc(100% - 1em); }
+      & > *              { width: calc(33.33% - 1em); }
+      & > .span-two      { width: calc(66.66% - 1em); }
+      & > .span-three    { width: calc(100% - 1em); }
+      & > .span-four     { width: calc(100% - 1em); }
+      & > .span-five     { width: calc(100% - 1em); }
+      & > .span-six      { width: calc(100% - 1em); }
+      & > .span-seven    { width: calc(100% - 1em); }
+      & > .span-eight    { width: calc(100% - 1em); }
+      & > .span-nine     { width: calc(100% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-four-columns { 
-      & > *           { width: calc(25% - 1em); }
-      & > .span-two   { width: calc(50% - 1em); }
-      & > .span-three { width: calc(75% - 1em); }
-      & > .span-four  { width: calc(100% - 1em); }
+      & > *              { width: calc(25% - 1em); }
+      & > .span-two      { width: calc(50% - 1em); }
+      & > .span-three    { width: calc(75% - 1em); }
+      & > .span-four     { width: calc(100% - 1em); }
+      & > .span-five     { width: calc(100% - 1em); }
+      & > .span-six      { width: calc(100% - 1em); }
+      & > .span-seven    { width: calc(100% - 1em); }
+      & > .span-eight    { width: calc(100% - 1em); }
+      & > .span-nine     { width: calc(100% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-five-columns { 
-      & > *           { width: calc(20% - 1em); }
-      & > .span-two   { width: calc(40% - 1em); }
-      & > .span-three { width: calc(60% - 1em); }
-      & > .span-four  { width: calc(80% - 1em); }
-      & > .span-five  { width: calc(100% - 1em); }
+      & > *              { width: calc(20% - 1em); }
+      & > .span-two      { width: calc(40% - 1em); }
+      & > .span-three    { width: calc(60% - 1em); }
+      & > .span-four     { width: calc(80% - 1em); }
+      & > .span-five     { width: calc(100% - 1em); }
+      & > .span-six      { width: calc(100% - 1em); }
+      & > .span-seven    { width: calc(100% - 1em); }
+      & > .span-eight    { width: calc(100% - 1em); }
+      & > .span-nine     { width: calc(100% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-six-columns { 
-      & > *           { width: calc(((1/6*100%)) - 1em); }
-      & > .span-two   { width: calc(((2/6*100%)) - 1em); }
-      & > .span-three { width: calc(((3/6*100%)) - 1em); }
-      & > .span-four  { width: calc(((4/6*100%)) - 1em); }
-      & > .span-five  { width: calc(((5/6*100%)) - 1em); }
-      & > .span-six   { width: calc(100% - 1em); }
+      & > *              { width: calc(((1/6*100%)) - 1em); }
+      & > .span-two      { width: calc(((2/6*100%)) - 1em); }
+      & > .span-three    { width: calc(((3/6*100%)) - 1em); }
+      & > .span-four     { width: calc(((4/6*100%)) - 1em); }
+      & > .span-five     { width: calc(((5/6*100%)) - 1em); }
+      & > .span-six      { width: calc(100% - 1em); }
+      & > .span-seven    { width: calc(100% - 1em); }
+      & > .span-eight    { width: calc(100% - 1em); }
+      & > .span-nine     { width: calc(100% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-seven-columns { 
-      & > *           { width: calc(((1/7*100%)) - 1em); }
-      & > .span-two   { width: calc(((2/7*100%)) - 1em); }
-      & > .span-three { width: calc(((3/7*100%)) - 1em); }
-      & > .span-four  { width: calc(((4/7*100%)) - 1em); }
-      & > .span-five  { width: calc(((5/7*100%)) - 1em); }
-      & > .span-six   { width: calc(((6/7*100%)) - 1em); }
-      & > .span-seven { width: calc(100% - 1em); }
+      & > *              { width: calc(((1/7*100%)) - 1em); }
+      & > .span-two      { width: calc(((2/7*100%)) - 1em); }
+      & > .span-three    { width: calc(((3/7*100%)) - 1em); }
+      & > .span-four     { width: calc(((4/7*100%)) - 1em); }
+      & > .span-five     { width: calc(((5/7*100%)) - 1em); }
+      & > .span-six      { width: calc(((6/7*100%)) - 1em); }
+      & > .span-seven    { width: calc(100% - 1em); }
+      & > .span-eight    { width: calc(100% - 1em); }
+      & > .span-nine     { width: calc(100% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-eight-columns { 
-      & > *           { width: calc(((1/8*100%)) - 1em); }
-      & > .span-two   { width: calc(((2/8*100%)) - 1em); }
-      & > .span-three { width: calc(((3/8*100%)) - 1em); }
-      & > .span-four  { width: calc(((4/8*100%)) - 1em); }
-      & > .span-five  { width: calc(((5/8*100%)) - 1em); }
-      & > .span-six   { width: calc(((6/8*100%)) - 1em); }
-      & > .span-seven { width: calc(((7/8*100%)) - 1em); }
-      & > .span-eight { width: calc(100% - 1em); }
+      & > *              { width: calc(((1/8*100%)) - 1em); }
+      & > .span-two      { width: calc(((2/8*100%)) - 1em); }
+      & > .span-three    { width: calc(((3/8*100%)) - 1em); }
+      & > .span-four     { width: calc(((4/8*100%)) - 1em); }
+      & > .span-five     { width: calc(((5/8*100%)) - 1em); }
+      & > .span-six      { width: calc(((6/8*100%)) - 1em); }
+      & > .span-seven    { width: calc(((7/8*100%)) - 1em); }
+      & > .span-eight    { width: calc(100% - 1em); }
+      & > .span-nine     { width: calc(100% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-nine-columns { 
-      & > *           { width: calc(((1/9*100%)) - 1em); }
-      & > .span-two   { width: calc(((2/9*100%)) - 1em); }
-      & > .span-three { width: calc(((3/9*100%)) - 1em); }
-      & > .span-four  { width: calc(((4/9*100%)) - 1em); }
-      & > .span-five  { width: calc(((5/9*100%)) - 1em); }
-      & > .span-six   { width: calc(((6/9*100%)) - 1em); }
-      & > .span-seven { width: calc(((7/9*100%)) - 1em); }
-      & > .span-eight { width: calc(((8/9*100%)) - 1em); }
-      & > .span-nine  { width: calc(100% - 1em); }
+      & > *              { width: calc(((1/9*100%)) - 1em); }
+      & > .span-two      { width: calc(((2/9*100%)) - 1em); }
+      & > .span-three    { width: calc(((3/9*100%)) - 1em); }
+      & > .span-four     { width: calc(((4/9*100%)) - 1em); }
+      & > .span-five     { width: calc(((5/9*100%)) - 1em); }
+      & > .span-six      { width: calc(((6/9*100%)) - 1em); }
+      & > .span-seven    { width: calc(((7/9*100%)) - 1em); }
+      & > .span-eight    { width: calc(((8/9*100%)) - 1em); }
+      & > .span-nine     { width: calc(100% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-ten-columns { 
-      & > *           { width: calc(10% - 1em); }
-      & > .span-two   { width: calc(20% - 1em); }
-      & > .span-three { width: calc(30% - 1em); }
-      & > .span-four  { width: calc(40% - 1em); }
-      & > .span-five  { width: calc(50% - 1em); }
-      & > .span-six   { width: calc(60% - 1em); }
-      & > .span-seven { width: calc(70% - 1em); }
-      & > .span-eight { width: calc(80% - 1em); }
-      & > .span-nine  { width: calc(90% - 1em); }
-      & > .span-ten   { width: calc(100% - 1em); }
+      & > *              { width: calc(10% - 1em); }
+      & > .span-two      { width: calc(20% - 1em); }
+      & > .span-three    { width: calc(30% - 1em); }
+      & > .span-four     { width: calc(40% - 1em); }
+      & > .span-five     { width: calc(50% - 1em); }
+      & > .span-six      { width: calc(60% - 1em); }
+      & > .span-seven    { width: calc(70% - 1em); }
+      & > .span-eight    { width: calc(80% - 1em); }
+      & > .span-nine     { width: calc(90% - 1em); }
+      & > .span-ten      { width: calc(100% - 1em); }
+      & > .span-eleven   { width: calc(100% - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-twelve-columns { 
-      & > *            { width: calc(((1/12*100%)) - 1em); }
-      & > .span-two    { width: calc(((2/12*100%)) - 1em); }
-      & > .span-three  { width: calc(((3/12*100%)) - 1em); }
-      & > .span-four   { width: calc(((4/12*100%)) - 1em); }
-      & > .span-five   { width: calc(((5/12*100%)) - 1em); }
-      & > .span-six    { width: calc(((6/12*100%)) - 1em); }
-      & > .span-seven  { width: calc(((7/12*100%)) - 1em); }
-      & > .span-eight  { width: calc(((8/12*100%)) - 1em); }
-      & > .span-nine   { width: calc(((9/12*100%)) - 1em); }
-      & > .span-ten    { width: calc(((10/12*100%)) - 1em); }
-      & > .span-eleven { width: calc(((11/12*100%)) - 1em); }
-      & > .span-twelve { width: calc(100% - 1em); }
+      & > *              { width: calc(((1/12*100%)) - 1em); }
+      & > .span-two      { width: calc(((2/12*100%)) - 1em); }
+      & > .span-three    { width: calc(((3/12*100%)) - 1em); }
+      & > .span-four     { width: calc(((4/12*100%)) - 1em); }
+      & > .span-five     { width: calc(((5/12*100%)) - 1em); }
+      & > .span-six      { width: calc(((6/12*100%)) - 1em); }
+      & > .span-seven    { width: calc(((7/12*100%)) - 1em); }
+      & > .span-eight    { width: calc(((8/12*100%)) - 1em); }
+      & > .span-nine     { width: calc(((9/12*100%)) - 1em); }
+      & > .span-ten      { width: calc(((10/12*100%)) - 1em); }
+      & > .span-eleven   { width: calc(((11/12*100%)) - 1em); }
+      & > .span-twelve   { width: calc(100% - 1em); }
+      & > .span-thirteen { width: calc(100% - 1em); }
+      & > .span-fourteen { width: calc(100% - 1em); }
+      & > .span-fifteen  { width: calc(100% - 1em); }
+      & > .span-sixteen  { width: calc(100% - 1em); }
     }
 
     .flex.@{name}-sixteen-columns { 
