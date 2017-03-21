@@ -55,7 +55,7 @@ function start(e) {
   el = dom.create(html);
   dom(el).append(
     images.map(i => {
-      let url = i.media.srcset.high.url;
+      let url = i.media.srcset.slice().reverse()[0].url;
       let caption = '';
       let figure = dom(`[x-cp-id="${i.id}"]`).path('figure');
       if (figure) {
