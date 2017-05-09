@@ -1,6 +1,6 @@
-import Plugin from 'plugin';
-import article from 'article';
-import dom from 'dom';
+import Plugin from '/app/plugin.js';
+import article from '/app/article.js';
+import dom from '/app/dom.js';
 
 // window.dom = dom;
 

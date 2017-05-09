@@ -1,5 +1,5 @@
-import article from 'article';
-import dom from 'dom';
+import article from '/app/article.js';
+import dom from '/app/dom.js';
 
 // inspired by Typeset.js
 // https://blot.im/typeset/

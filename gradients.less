@@ -10,26 +10,26 @@
 
 
 .gradient.translucent { opacity: 0.5; }
-.gradient.blend-multiply { mix-blend-mode: multiply; }
-.gradient.blend-screen { mix-blend-mode: screen; }
-.gradient.blend-overlay { mix-blend-mode: overlay; }
-.gradient.blend-darken { mix-blend-mode: darken; }
-.gradient.blend-lighten { mix-blend-mode: lighten; }
-.gradient.blend-dodge { mix-blend-mode: color-dodge; }
-.gradient.blend-burn { mix-blend-mode: color-burn; }
-.gradient.blend-hard { mix-blend-mode: hard-light; }
-.gradient.blend-soft { mix-blend-mode: soft-light; }
-.gradient.blend-difference { mix-blend-mode: difference; }
-.gradient.blend-exclusion { mix-blend-mode: exclusion; }
-.gradient.blend-hue { mix-blend-mode: hue; }
-.gradient.blend-saturation { mix-blend-mode: saturation; }
-.gradient.blend-color { mix-blend-mode: color; }
-.gradient.blend-luminosity { mix-blend-mode: luminosity; }
 
+@supports (mix-blend-mode) {
+  .gradient.blend-multiply { mix-blend-mode: multiply; }
+  .gradient.blend-screen { mix-blend-mode: screen; }
+  .gradient.blend-overlay { mix-blend-mode: overlay; }
+  .gradient.blend-darken { mix-blend-mode: darken; }
+  .gradient.blend-lighten { mix-blend-mode: lighten; }
+  .gradient.blend-dodge { mix-blend-mode: color-dodge; }
+  .gradient.blend-burn { mix-blend-mode: color-burn; }
+  .gradient.blend-hard { mix-blend-mode: hard-light; }
+  .gradient.blend-soft { mix-blend-mode: soft-light; }
+  .gradient.blend-difference { mix-blend-mode: difference; }
+  .gradient.blend-exclusion { mix-blend-mode: exclusion; }
+  .gradient.blend-hue { mix-blend-mode: hue; }
+  .gradient.blend-saturation { mix-blend-mode: saturation; }
+  .gradient.blend-color { mix-blend-mode: color; }
+  .gradient.blend-luminosity { mix-blend-mode: luminosity; }
+}
 
-// fallback for those is just 50% opacity
-html.no-mix-blend-mode {
-
+@supports not (mix-blend-mode) {
   .gradient.blend-multiply,
   .gradient.blend-screen,
   .gradient.blend-overlay,
@@ -49,20 +49,13 @@ html.no-mix-blend-mode {
   }
 }
 
-.gradient.text {
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
-// feature detected
-html.no-background-clip {
+@supports('-webkit-background-clip') {
   .gradient.text {
-    background: none !important;
-    -webkit-background-clip: initial !important;
-    -webkit-text-fill-color: initial !important;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
-
 
 .gradient-parent {
   position: relative;

@@ -1,8 +1,8 @@
-import dom from 'dom';
-import Plugin from 'plugin';
-import * as u from 'utility';
-import * as env from 'env';
-import article from 'article';
+import dom from '/app/dom.js';
+import Plugin from '/app/plugin.js';
+import * as u from '/app/utility.js';
+import * as env from '/app/env.js';
+import article from '/app/article.js';
 
 import * as Kaleidoscope from 'kaleidoscopejs';
 

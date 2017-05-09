@@ -1,6 +1,6 @@
-import article from 'article';
-import dom from 'dom';
-import {contentOrigin} from 'env';
+import article from '/app/article.js';
+import dom from '/app/dom.js';
+import { contentOrigin } from '/app/env.js';
 
 let arrow = `
   <svg class="arrow" viewBox="0 0 100 125" xmlns="http://www.w3.org/2000/svg"><path d="M91.9,62.5L50,86.7L8.1,110.9c0,0,10.2-20,10.2-48.4S8.1,14.1,8.1,14.1L50,38.3L91.9,62.5z"/></svg>

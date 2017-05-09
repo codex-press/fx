@@ -1,6 +1,6 @@
-import article from 'article';
-import Plugin from 'plugin';
-import dom from 'dom';
+import article from '/app/article.js';
+import Plugin from '/app/plugin.js';
+import dom from '/app/dom.js';
 
 article.register('.flow-source', class Flow extends Plugin {
 
