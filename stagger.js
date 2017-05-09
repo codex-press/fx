@@ -1,5 +1,5 @@
-import article from 'article';
-import Plugin from 'plugin';
+import article from '/app/article.js';
+import Plugin from '/app/plugin.js';
 
 class Stagger extends Plugin {
 
