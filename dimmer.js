@@ -1,6 +1,4 @@
-import Plugin from '/app/plugin.js';
-import article from '/app/article.js';
-import dom from '/app/dom.js';
+import { dom, article, Plugin } from '/app/index.js';
 
 // window.dom = dom;
 

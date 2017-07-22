@@ -1,10 +1,6 @@
-import dom from '/app/dom.js';
-import Plugin from '/app/plugin.js';
-import * as u from '/app/utility.js';
-import * as env from '/app/env.js';
-import article from '/app/article.js';
+import { dom, utitilty as u, env, article, Plugin } from '/app/index.js';
+// import * as Kaleidoscope from './lib/kaleidoscopejs.js';
 
-import * as Kaleidoscope from 'kaleidoscopejs';
 
 article.register('[x-cp-video].v360', class v360 extends Plugin {
 

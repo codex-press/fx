@@ -1,6 +1,4 @@
-import article from '/app/article.js';
-import Plugin from '/app/plugin.js';
-import dom from '/app/dom.js';
+import { dom, article, Plugin } from '/app/index.js';
 
 article.register('.scroll-overlay', class ScrollOverlay extends Plugin {
 
