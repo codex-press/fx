@@ -1,3 +1,3 @@
-import './onscreen';
-import './split';
-import './stagger';
+import './onscreen.js';
+import './split.js';
+import './stagger.js';
