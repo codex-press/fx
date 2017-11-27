@@ -1,4 +1,5 @@
-import { dom, article, Plugin } from '/app/index.js';
+import { dom, article } from '/app/index.js';
+import Plugin from '/app/src/plugin.js'
 
 article.register('.scale-to-parent', class Scale extends Plugin {
 

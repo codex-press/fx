@@ -1,4 +1,5 @@
 import { dom, article, Plugin } from '/app/index.js';
+import Plugin from '/app/src/plugin.js';
 
 
 article.register('.fit-font-size', class FontSize extends Plugin {

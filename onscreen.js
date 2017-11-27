@@ -1,4 +1,5 @@
-import { article, Plugin } from '/app/index.js';
+import { article } from '/app/index.js';
+import Plugin from '/app/src/plugin.js'
 
 article.register('.onscreen', class Onscreen extends Plugin {
 

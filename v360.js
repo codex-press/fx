@@ -1,4 +1,5 @@
-import { dom, utitilty as u, env, article, Plugin } from '/app/index.js';
+import { dom, utitilty as u, env, article } from '/app/index.js';
+import Plugin from '/app/src/plugin.js'
 // import * as Kaleidoscope from './lib/kaleidoscopejs.js';
 
 

@@ -1,4 +1,5 @@
-import { dom, article, Plugin } from '/app/index.js';
+import { dom, article } from '/app/index.js';
+import Plugin from '/app/src/plugin.js'
 
 // N.B. for .split-lines this completely resets contents after a resize so
 // might cause compatibility issues with other plugins

@@ -1,4 +1,5 @@
-import { dom, animate, article, Plugin } from '/app/index.js';
+import { dom, animate, article } from '/app/index.js';
+import Plugin from '/app/src/plugin.js'
 
 article.register('.parallax', class Parallax extends Plugin {
 
