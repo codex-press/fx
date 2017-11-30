@@ -7,9 +7,9 @@ let replace = function(old, nu) {
   if (nu instanceof Node)
     old.parentNode.replaceChild(nu, old);
   else if (typeof nu === 'string') {
+    var frag = document.createDocumentFragment();
     let temp = document.createElement('div');
     temp.innerHTML = nu;
-    let frag = document.createDocumentFragment();
     let child;
     while (child = temp.firstChild) {
       frag.appendChild(child);
