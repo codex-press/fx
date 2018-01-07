@@ -1,0 +1,30 @@
+
+body {
+  padding: 0;
+}
+
+fx-paginator {
+  background: black;
+  display: block;
+}
+
+fx-paginator > * {
+  min-height: 100vh;
+  // XXX problem
+  background-color: #e8e3e3;
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid #999;
+  box-shadow: 3px 0px 10px rgba(51, 51, 51, 0.5);
+}
+
+fx-paginator > *:not(figure) {
+  padding: 3rem 1rem 8rem;
+}
+
+fx-paginator > figure {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+
