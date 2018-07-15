@@ -1,5 +1,13 @@
 
 
+export function debounce(time, fn, context) {
+  let timeout
+  return (...args) => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(fn.bind(context, ...args), time)
+  }
+}
+
 export function textNodes(el) {
 
   let textHarvester = (list, node) => {
