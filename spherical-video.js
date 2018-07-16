@@ -2,6 +2,7 @@ import { dom, env, article } from '/app/index.js';
 import Plugin from '/app/src/plugin.js'
 import * as Kaleidoscope from './lib/kaleidoscope.js';
 
+window.top.postMessage({ event: 'requestDeviceMotion' }, '*')
 
 article.register('.spherical-video', class SphericalVideo extends Plugin {
 
@@ -23,7 +24,6 @@ article.register('.spherical-video', class SphericalVideo extends Plugin {
 
     this.viewer = new Kaleidoscope.Video({
       source: this.videoElem,
-      verticalPanning: false,
       container: this.el,
       width: this.el.clientWidth,
       height: this.el.clientWidth * 0.5625,
