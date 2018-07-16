@@ -1,0 +1,37 @@
+
+.spherical-video {
+  position: relative;
+  margin: 2rem 0;
+}
+
+.spherical-video canvas {
+  display: block;
+}
+
+.spherical-video .play-button {
+  width: 5em;
+  height: 5em;
+  position: absolute;
+  fill: white;
+  top: calc(50% - 2.5em);
+  left: calc(50% - 2.5em);
+  cursor: pointer;
+}
+
+.spherical-video:not(.playing)::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.spherical-video.playing .play-button {
+  display: none;
+}
+
+
