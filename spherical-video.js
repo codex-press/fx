@@ -9,7 +9,7 @@ article.register('.spherical-video', class SphericalVideo extends Plugin {
     super(args)
 
     window.addEventListener('resize', () => this.resize())
-    window.addEventListener(
+    this.el.addEventListener(
       'touchmove',
       event => event.preventDefault(),
       { passive : false }
