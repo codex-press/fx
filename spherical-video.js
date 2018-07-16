@@ -5,6 +5,7 @@ import * as Kaleidoscope from './lib/kaleidoscope.js';
 window.top.postMessage({ event: 'requestDeviceMotion' }, '*')
 
 window.addEventListener('message', event => {
+  console.log('message', event.data)
   if (event.data.event == 'readyCheck')
     window.top.postMessage({ event: 'requestDeviceMotion' }, '*')
 })
