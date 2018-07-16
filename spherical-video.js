@@ -4,6 +4,11 @@ import * as Kaleidoscope from './lib/kaleidoscope.js';
 
 window.top.postMessage({ event: 'requestDeviceMotion' }, '*')
 
+window.addEventListener('message', event => {
+  if (event.data.event == 'readyCheck')
+    window.top.postMessage({ event: 'requestDeviceMotion' }, '*')
+})
+
 
 article.register('.spherical-video', class SphericalVideo extends Plugin {
 
