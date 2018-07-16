@@ -2,13 +2,13 @@ import { dom, env, article } from '/app/index.js';
 import Plugin from '/app/src/plugin.js'
 import * as Kaleidoscope from './lib/kaleidoscope.js';
 
+// must request devicemotion events from the parent frame
 window.top.postMessage({ event: 'requestDeviceMotion' }, '*')
-
 window.addEventListener('message', event => {
-  console.log('message', event.data)
-  if (event.data.event == 'readyCheck')
+  if (event.data.event == 'parentReady')
     window.top.postMessage({ event: 'requestDeviceMotion' }, '*')
 })
+
 
 
 article.register('.spherical-video', class SphericalVideo extends Plugin {
