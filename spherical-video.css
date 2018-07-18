@@ -8,16 +8,6 @@
   display: block;
 }
 
-.spherical-video .play-button {
-  width: 5em;
-  height: 5em;
-  position: absolute;
-  fill: white;
-  top: calc(50% - 2.5em);
-  left: calc(50% - 2.5em);
-  cursor: pointer;
-}
-
 .spherical-video:not(.playing)::before {
   content: '';
   display: block;
@@ -30,8 +20,27 @@
   cursor: pointer;
 }
 
+.spherical-video .play-button {
+  position: absolute;
+  width: 7em;
+  height: 7em;
+  fill: white;
+  top: calc(50% - 2.5em);
+  left: calc(50% - 2.5em);
+  cursor: pointer;
+}
+
 .spherical-video.playing .play-button {
   display: none;
 }
 
+.spherical-video svg.spherical-icon {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  width: 50%;
+  transform: translate(-50%, -50%);
+  fill: black;
+  stroke: black;
+}
 
