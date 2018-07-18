@@ -34,7 +34,7 @@ class FXCarousel extends HTMLElement {
           position: relative;
           display: flex;
           flex-flow: row nowrap;
-          transition: transform 0.3s ease-out
+          transition: transform 0.3s ease-out;
         }
 
         ::slotted(*) {
