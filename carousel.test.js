@@ -33,7 +33,10 @@ describe('Carousel', () => {
 
       shadow.querySelector('.next-slide').click()
       let nextStrip = strip.getBoundingClientRect()
-      assert(initialRect !== nextStrip)
+      console.log(JSON.stringify(initialRect))
+      console.log(JSON.stringify(nextStrip))
+      console.log('but are they == ?', initialRect == nextStrip)
+      assert.notEqual(initialRect.left, nextStrip.left)
 
     })
 
@@ -41,7 +44,7 @@ describe('Carousel', () => {
 
       shadow.querySelector('.previous-slide').click()
       let prevStrip = strip.getBoundingClientRect()
-      assert(initialRect !== prevStrip)
+      assert.notEqual(initialRect.left, prevStrip.left)
 
     })
 
