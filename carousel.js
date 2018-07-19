@@ -16,6 +16,8 @@ class FXCarousel extends HTMLElement {
   constructor() {
     super() 
     this._slideIndex = 0
+    this._loop = false
+    this._arrow = 'carot'
   }
 
 
@@ -59,11 +61,11 @@ class FXCarousel extends HTMLElement {
       </style>
 
       <div class="previous-slide">
-        <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z" fill="#fff"/></svg>
+        <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z" fill="#fff"></path></svg>
       </div>
 
       <div class="next-slide">
-        <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z" fill="#fff"/></svg>      
+        <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z" fill="#fff"></path></svg>
       </div>
 
       <div class="strip">
@@ -78,6 +80,30 @@ class FXCarousel extends HTMLElement {
     this.shadowRoot
       .querySelector('.next-slide')
       .addEventListener('click', event => this.goToNext())
+
+    this._init()
+  }
+
+  _init() {
+    // check for loop
+    const carousel = document.querySelector('fx-carousel')
+    if (carousel.hasAttributes()) {
+      const attrs = carousel.attributes
+      const output = []
+      for(let i = attrs.length - 1; i >= 0; i--) {
+        // if loop or loop="true" is in attributes
+        // then set loop to true
+        if(
+          attrs[i].name === 'loop' ||
+          (attrs[i].name === 'loop' && attrs[i].value === true)
+        ) this._loop = true
+        // otherwise set to false
+        else this._loop = false
+
+        output.push(attrs[i])
+      }
+      console.log(output)
+    }
   }
 
 
@@ -100,12 +126,16 @@ class FXCarousel extends HTMLElement {
 
 
   goToNext() {
-    this.slideIndex += 1
+    if (this._loop && this.slideIndex === this.children.length - 1)
+      this.slideIndex = 0 
+    else this.slideIndex += 1
   }
 
 
   goToPrevious() {
-    this.slideIndex -= 1
+    if (this._loop && this.slideIndex === 0)
+      this.slideIndex = this.children.length - 1
+    else this.slideIndex -= 1
   }
 
 
