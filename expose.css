@@ -1,7 +1,21 @@
 
+.fx-expose {
+  overflow: hidden;
+}
+
 .expose-button {
-  font-weight: bold;
   cursor: pointer;
 }
 
+.expose-button:before {
+  display: inline-block;
+  margin-right: 0.6em;
+  content: url('data:image/svg+xml;utf8,<svg preserveAspectRatio="none" width="6" height="14" viewBox="0 0 50 100" xmlns="http://www.w3.org/2000/svg"><polygon points="0,0 0,100 50,50"/></svg>');
+  transition: transform 0.3s ease-out;
+  vertical-align: baseline;
+}
+
+.expose-button.open:before {
+  transform: rotate(90deg);
+}
 

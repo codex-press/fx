@@ -9,19 +9,23 @@ article.register('.fx-expose', class FXExpose extends Plugin {
     this.button = document.createElement('div')
     this.el.parentNode.insertBefore(this.button, this.el)
     this.button.addEventListener('click', () => this.toggle())
-    this.button.innerHTML = '<p class="expose-button">Read More</p>'
+    this.button.classList.add('expose-button')
+    this.button.innerHTML = 'Read More'
     this.el.style.height = '0px'
-    this.expanded = false
   }
 
 
   toggle() {
-    if (this.expanded) {
+    if (this.button.classList.contains('open')) {
+      this.button.classList.remove('open')
+      this.button.innerHTML = 'Read More'
       this.el.style.transition = 'height 0.3s ease-out'
       this.el.style.height = '0px'
       this.expanded = false
     }
     else {
+      this.button.innerHTML = 'Read Less'
+      this.button.classList.add('open')
       this.el.style.transition = ''
       this.el.style.height = 'auto'
       let height = this.el.clientHeight
