@@ -23,7 +23,10 @@ module.exports = function(config) {
       { pattern: 'node_modules/systemjs-plugin-babel/**/*.js', included: false },
     ],
 
-    proxies: { '/app': 'http://localhost:8000/app', },
+    proxies: {
+      '/app': 'http://localhost:8000/app',
+      '/parent': 'http://localhost:8000/parent'
+    },
 
     exclude: [
       'node_modules/',
@@ -42,6 +45,7 @@ module.exports = function(config) {
           'es-module-loader': 'node_modules/es-module-loader/dist/es-module-loader.js',
           'systemjs': 'node_modules/systemjs/dist/system.js',
           'systemjs-babel-build': 'node_modules/systemjs-plugin-babel/systemjs-babel-browser.js',
+          'babel-plugin-transform-react-jsx': 'node_modules/babel-plugin-transform-react-jsx/lib/index.js'
         },
 
       }

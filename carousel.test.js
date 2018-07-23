@@ -146,7 +146,7 @@ describe('Carousel', () => {
   })
 
 
-  it('loops from last to first', () => {
+  it.only('loops from last to first', () => {
     document.body.innerHTML = (`
       <fx-carousel loop>
         <div></div>
@@ -165,7 +165,7 @@ describe('Carousel', () => {
   })
 
 
-  it('loops from first to last', () => {
+  it.only('loops from first to last', () => {
     document.body.innerHTML = (`
       <fx-carousel loop>
         <div></div>
@@ -240,7 +240,7 @@ describe('Carousel', () => {
   })
 
 
-  it.only('button is set to circle', () => {
+  it('button is set to circle', () => {
     document.body.innerHTML = (`
       <fx-carousel button="circle-chevron">
         <div></div>
@@ -270,7 +270,7 @@ describe('Carousel', () => {
   })
 
 
-  it.only('button is set to arrow', () => {
+  it('button is set to arrow', () => {
     document.body.innerHTML = (`
       <fx-carousel button="arrow">
         <div></div>
@@ -300,7 +300,7 @@ describe('Carousel', () => {
   })
 
 
-  it.only('button is set to triangle', () => {
+  it('button is set to triangle', () => {
     // NOTE TODO - find triangle svg, correct to white colors in prev
     document.body.innerHTML = (`
       <fx-carousel button="triangle">

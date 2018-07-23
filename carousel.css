@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  overflow: hidden;
+}
+
+.strip {
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  transition: transform 0.3s ease-out;
+}
+
+::slotted(*) {
+  flex: 0 0 100%;
+  margin: 0;
+}
+
+.previous-slide, .next-slide {
+  display: flex;
+  position: absolute;
+  z-index: 10;
+  width: 100px;
+  height: 100%;
+  align-items: center;
+  cursor: pointer;
+}
+
+.next-slide {
+  right: 0;
+}
