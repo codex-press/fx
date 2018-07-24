@@ -1,4 +1,5 @@
 :host {
+  position: relative;
   display: block;
   overflow: hidden;
 }
@@ -28,4 +29,8 @@
 .next-slide {
   right: 0;
   justify-content: flex-end;
+}
+
+.hidden-button {
+  display: none;
 }

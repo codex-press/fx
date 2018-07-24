@@ -11,9 +11,12 @@ class FXCarousel extends HTMLElement {
     this._slideIndex = 0
     this._slidePosition = 0
     this._loop = false
+    this._hidePrevious = true
+    this._hideNext = false
     this.goToNext = this.goToNext.bind(this)
     this.goToPrevious = this.goToPrevious.bind(this)
     this.saveSlidePositions = this.saveSlidePositions.bind(this)
+    this.isButtonHidden = this.isButtonHidden.bind(this)
     window.addEventListener('resize', () => {
       this.saveSlidePositions()
       this.renderSlides()
@@ -41,11 +44,22 @@ class FXCarousel extends HTMLElement {
           on-load={ this.saveSlidePositions }
         />
 
-        <div className="previous-slide" on-click={ this.goToPrevious }>
+        <div
+          class={{
+            'previous-slide': true,
+            'hidden-button': this.isButtonHidden('previous')
+          }}
+          on-click={ this.goToPrevious }
+        >
           { this.previousButton() }
         </div>
 
-        <div className="next-slide" on-click={ this.goToNext }>
+        <div
+          class={{
+            'next-slide': true,
+            'hidden-button': this.isButtonHidden('next') }}
+          on-click={ this.goToNext }
+        >
           { this.nextButton() }
         </div>
 
@@ -63,9 +77,22 @@ class FXCarousel extends HTMLElement {
 
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'loop' && (newValue || newValue === ''))
+    if (name === 'loop' && (newValue || newValue === '')) {
       this._loop = true
+      this._hidePrevious = false
+      this._hideNext = false
+    }
     this.render()
+  }
+
+
+  isButtonHidden(value) {
+    if (value === 'previous')
+      return this._hidePrevious
+    else if (value === 'next')
+      return this._hideNext
+    else 
+      throw TypeError('button value must be left or right')
   }
 
 
@@ -159,6 +186,7 @@ class FXCarousel extends HTMLElement {
 
   nextButton() {
     switch (this.button) {
+
       case 'circle':
         return <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1037 1395l102-102q19-19 19-45t-19-45l-307-307 307-307q19-19 19-45t-19-45l-102-102q-19-19-45-19t-45 19l-454 454q-19 19-19 45t19 45l454 454q19 19 45 19t45-19zm627-499q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z"></path></svg>
 
@@ -176,18 +204,52 @@ class FXCarousel extends HTMLElement {
 
 
   goToNext() {
-    if (this.loop && this.slideIndex === this.children.length - 1)
-      this.slideIndex = 0 
-    else
+    let startNext = this._hideNext
+
+    if (this.loop && this.slideIndex === this.children.length - 1) {
+      this.slideIndex = 0
+      this._hideNext = false
+    } else if (!this.loop && this.slideIndex === this.children.length - 2) {
       this.slideIndex += 1
+      this._hideNext = true
+    } else {
+      this.slideIndex += 1
+      this._hideNext = false
+    }
+
+    if (startNext !== this._hideNext) {
+      this.render()
+    }
+
+    if (this._hidePrevious === true) {
+      this._hidePrevious = false
+      this.render()
+    }
   }
 
 
   goToPrevious() {
-    if (this.loop && this.slideIndex === 0)
+    let startPrevious = this._hidePrevious
+
+    if (this.loop && this.slideIndex === 0) {
       this.slideIndex = this.children.length - 1
-    else
+      this._hidePrevious = false
+    } else if (!this.loop && this.slideIndex === 1) {
       this.slideIndex -= 1
+      this._hidePrevious = true
+    } else {
+      this.slideIndex -= 1
+      this._hidePrevious = false
+    }
+
+    if (startPrevious !== this._hidePrevious) {
+      this.render()
+    }
+
+    if (this._hideNext === true) {
+      this._hideNext = false
+      this.render()
+    }
   }
 
 
