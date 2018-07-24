@@ -34,3 +34,17 @@
 .hidden-button {
   display: none;
 }
+
+.slide-indicator {
+  display: flex;
+  position: absolute;
+  z-index: 10;
+  justify-content: center;
+  align-self: flex-end;
+  bottom: 10%;
+  width: 100vw;
+}
+
+.slide-indicator svg {
+  margin: 0 0.5rem;
+}
