@@ -41,20 +41,25 @@ class FXCarousel extends HTMLElement {
           on-load={ this.saveSlidePositions }
         />
 
-        {(this.slideIndex > 0 || this.loop) &&
+        { (this.slideIndex > 0 || this.loop) &&
           <div className="previous-slide" on-click={ this.goToPrevious }>
             { this.previousButton() }
           </div>
         }
 
-        {(this.slideIndex < this.children.length - 1 || this.loop) &&
+        { (this.slideIndex < this.children.length - 1 || this.loop) &&
           <div className="next-slide" on-click={ this.goToNext }>
             { this.nextButton() }
           </div>
         }
 
         <div className="slide-indicator">
-          { this.indicator() }
+          { Array.from(this.children).map((el, i) =>
+              i === this.slideIndex ?
+              this.activeIndicator() :
+              this.inactiveIndicator()
+            )
+          }
         </div>
 
         <div className="strip">
@@ -121,16 +126,17 @@ class FXCarousel extends HTMLElement {
   }
 
 
-  indicator() {
-    const totalIndicator = []
-    for (let i = 0; i < this.children.length; i++)
-      if(i === this.slideIndex)
-        totalIndicator.push(<svg width="17" height="17" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1664 896q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" fill="#fff"></path></svg>)
-      else
-        totalIndicator.push(<svg width="17" height="17" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M896 256q-130 0-248.5 51t-204 136.5-136.5 204-51 248.5 51 248.5 136.5 204 204 136.5 248.5 51 248.5-51 204-136.5 136.5-204 51-248.5-51-248.5-136.5-204-204-136.5-248.5-51zm768 640q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" fill="#fff"></path></svg>)
+  activeIndicator() {
+    return (
+      <svg width="17" height="17" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1664 896q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" fill="#fff"></path></svg>
+    )
+  }
 
 
-    return totalIndicator
+  inactiveIndicator() {
+     return (
+       <svg width="17" height="17" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M896 256q-130 0-248.5 51t-204 136.5-136.5 204-51 248.5 51 248.5 136.5 204 204 136.5 248.5 51 248.5-51 204-136.5 136.5-204 51-248.5-51-248.5-136.5-204-204-136.5-248.5-51zm768 640q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" fill="#fff"></path></svg>
+     )
   }
 
 
