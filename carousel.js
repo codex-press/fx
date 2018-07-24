@@ -11,12 +11,9 @@ class FXCarousel extends HTMLElement {
     this._slideIndex = 0
     this._slidePosition = 0
     this._loop = false
-    this._hidePrevious = true
-    this._hideNext = false
     this.goToNext = this.goToNext.bind(this)
     this.goToPrevious = this.goToPrevious.bind(this)
     this.saveSlidePositions = this.saveSlidePositions.bind(this)
-    this.isButtonHidden = this.isButtonHidden.bind(this)
     window.addEventListener('resize', () => {
       this.saveSlidePositions()
       this.renderSlides()
@@ -44,24 +41,17 @@ class FXCarousel extends HTMLElement {
           on-load={ this.saveSlidePositions }
         />
 
-        <div
-          class={{
-            'previous-slide': true,
-            'hidden-button': this.isButtonHidden('previous')
-          }}
-          on-click={ this.goToPrevious }
-        >
-          { this.previousButton() }
-        </div>
+        {(this.slideIndex > 0 || this.loop) &&
+          <div className="previous-slide" on-click={ this.goToPrevious }>
+            { this.previousButton() }
+          </div>
+        }
 
-        <div
-          class={{
-            'next-slide': true,
-            'hidden-button': this.isButtonHidden('next') }}
-          on-click={ this.goToNext }
-        >
-          { this.nextButton() }
-        </div>
+        {(this.slideIndex < this.children.length - 1 || this.loop) &&
+          <div className="next-slide" on-click={ this.goToNext }>
+            { this.nextButton() }
+          </div>
+        }
 
         <div className="strip">
           <slot></slot>
@@ -79,20 +69,8 @@ class FXCarousel extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'loop' && (newValue || newValue === '')) {
       this._loop = true
-      this._hidePrevious = false
-      this._hideNext = false
     }
     this.render()
-  }
-
-
-  isButtonHidden(value) {
-    if (value === 'previous')
-      return this._hidePrevious
-    else if (value === 'next')
-      return this._hideNext
-    else 
-      throw TypeError('button value must be left or right')
   }
 
 
@@ -125,6 +103,8 @@ class FXCarousel extends HTMLElement {
     if (!Number.isInteger(value))
       throw TypeError('slideIndex must be an integer')
     this._slideIndex = Math.max(0, Math.min(value, this.children.length - 1))
+    if (this._slideIndex === 0 || this.children.length - 1)
+      this.render()
     const ease = animate.cubicOut(this._slidePosition, this._slideIndex)
     const duration = 300
     const tick = time => {
@@ -204,54 +184,17 @@ class FXCarousel extends HTMLElement {
 
 
   goToNext() {
-    let startNext = this._hideNext
-
-    if (this.loop && this.slideIndex === this.children.length - 1) {
-      this.slideIndex = 0
-      this._hideNext = false
-    } else if (!this.loop && this.slideIndex === this.children.length - 2) {
-      this.slideIndex += 1
-      this._hideNext = true
-    } else {
-      this.slideIndex += 1
-      this._hideNext = false
-    }
-
-    if (startNext !== this._hideNext) {
-      this.render()
-    }
-
-    if (this._hidePrevious === true) {
-      this._hidePrevious = false
-      this.render()
-    }
+    this.slideIndex === this.children.length - 1
+      ? this.slideIndex = 0
+      : this.slideIndex += 1
   }
 
 
   goToPrevious() {
-    let startPrevious = this._hidePrevious
-
-    if (this.loop && this.slideIndex === 0) {
-      this.slideIndex = this.children.length - 1
-      this._hidePrevious = false
-    } else if (!this.loop && this.slideIndex === 1) {
-      this.slideIndex -= 1
-      this._hidePrevious = true
-    } else {
-      this.slideIndex -= 1
-      this._hidePrevious = false
-    }
-
-    if (startPrevious !== this._hidePrevious) {
-      this.render()
-    }
-
-    if (this._hideNext === true) {
-      this._hideNext = false
-      this.render()
-    }
+    this.slideIndex === 0
+      ? this.slideIndex = this.children.length - 1
+      : this.slideIndex -= 1
   }
-
 
 }
 
