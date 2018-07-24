@@ -1,5 +1,10 @@
 {
   "name": "fx",
+  "codex": {
+    "ignore": [
+      "karma.conf.js"
+    ]
+  },
   "version": "1.0.0",
   "description": "<p align=\"center\">   <a href=\"https://codex.press/docs/fleurons\">     <img src=\"https://cdn.rawgit.com/codex-press/fleurons/2b999113fea4589a5631b79d1e4f7fd542975b21/inception.svg\" width=\"200\">   </a> </p> <h1 align=center>Codex FX</h1>",
   "main": "index.js",
@@ -7,11 +12,8 @@
     "kaleidoscopejs": "^1.0.11"
   },
   "devDependencies": {
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-env": "^1.6.0",
     "chai": "^3.5.0",
-    "es-module-loader": "^2.2.6",
-    "karma": "^1.5.0",
+    "karma": "^2.0.4",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-firefox-launcher": "^1.0.1",
@@ -19,11 +21,8 @@
     "karma-mocha-reporter": "^2.2.2",
     "karma-safari-launcher": "^1.0.0",
     "karma-sinon": "^1.0.5",
-    "karma-systemjs": "^0.16.0",
-    "mocha": "^3.2.0",
-    "sinon": "^2.0.0",
-    "systemjs": "^0.20.17",
-    "systemjs-plugin-babel": "0.0.25"
+    "mocha": "^5.2.0",
+    "sinon": "^6.1.4"
   },
   "scripts": {
     "test": "karma start"
@@ -37,5 +36,5 @@
   "bugs": {
     "url": "https://github.com/codex-press/fx/issues"
   },
-  "homepage": "https://github.com/codex-press/fx#readme"
+  "homepage": "https://codex.press/docs/fx"
 }
