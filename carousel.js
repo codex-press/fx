@@ -207,6 +207,8 @@ class FXCarousel extends HTMLElement {
 
 
   goToNext() {
+    if (this.slideIndex === this.children.length - 1 && !this.loop)
+      return
     this.slideIndex === this.children.length - 1
       ? this.slideIndex = 0
       : this.slideIndex += 1
@@ -214,6 +216,8 @@ class FXCarousel extends HTMLElement {
 
 
   goToPrevious() {
+    if (this.slideIndex === 0 && !this.loop)
+      return
     this.slideIndex === 0
       ? this.slideIndex = this.children.length - 1
       : this.slideIndex -= 1
