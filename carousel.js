@@ -7,7 +7,7 @@ import NotReact from './lib/snabbdom-pragma.js'
 class FXCarousel extends HTMLElement {
 
   constructor() {
-    super() 
+    super()
     this._slideIndex = 0
     this._slidePosition = 0
     this._loop = false
@@ -18,14 +18,14 @@ class FXCarousel extends HTMLElement {
       this.saveSlidePositions()
       this.renderSlides()
     })
-  }
-
-
-  connectedCallback() {
     this.attachShadow({ mode: 'open' })
     this.vnode = document.createElement('div')
     this.shadowRoot.appendChild(this.vnode)
     this.render()
+  }
+
+
+  connectedCallback() {
     this.saveSlidePositions()
     this.renderSlides()
   }

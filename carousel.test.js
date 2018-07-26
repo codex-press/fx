@@ -189,7 +189,7 @@ describe('Carousel', () => {
   })
 
 
-  it.only('default button is caret', () => {
+  it('default button is caret', () => {
     document.body.innerHTML = (`
       <fx-carousel>
         <div></div>
@@ -206,18 +206,18 @@ describe('Carousel', () => {
     const rightCaret = (`<svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z" fill="#fff"></path></svg>`)
     assert.equal(
       previousArrow.innerHTML.trim(),
-      leftCaret,
+      leftCaret.trim(),
       'left arrow matches'
     )
     assert.equal(
       nextArrow.innerHTML.trim(),
-      rightCaret,
+      rightCaret.trim(),
       'right arrow matches'
     )
   })
 
 
-  it.only('button is set to caret', () => {
+  it('button is set to caret', () => {
     document.body.innerHTML = (`
       <fx-carousel button="caret">
         <div></div>
@@ -229,28 +229,28 @@ describe('Carousel', () => {
     carousel.slideIndex = 1
 
     clock.tick(320)
-    
+
     const shadowRoot = carousel.shadowRoot
     const previousArrow = shadowRoot.querySelector('.previous-slide')
     const leftCaret = (`<svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z" fill="#fff"></path></svg>`)
     assert.equal(
       previousArrow.innerHTML.trim(),
-      leftCaret,
+      leftCaret.trim(),
       'left arrow matches'
     )
     const nextArrow = shadowRoot.querySelector('.next-slide')
     const rightCaret = (`<svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z" fill="#fff"></path></svg>`)
     assert.equal(
       nextArrow.innerHTML.trim(),
-      rightCaret,
+      rightCaret.trim(),
       'right arrow matches'
     )
   })
 
 
-  it.only('button is set to circle', () => {
+  it('button is set to circle', () => {
     document.body.innerHTML = (`
-      <fx-carousel button="circle-chevron">
+      <fx-carousel button="circle">
         <div></div>
         <div></div>
         <div></div>
@@ -265,7 +265,7 @@ describe('Carousel', () => {
     `)
     assert.equal(
       previousArrow.innerHTML.trim(),
-      leftCircleArrow,
+      leftCircleArrow.trim(),
       'left circle arrow matches'
     )
     const nextArrow = shadowRoot.querySelector('.next-slide')
@@ -274,13 +274,13 @@ describe('Carousel', () => {
     `)
     assert.equal(
       nextArrow.innerHTML.trim(),
-      rightCircleArrow,
+      rightCircleArrow.trim(),
       'right circle arrow matches'
     )
   })
 
 
-  it.only('button is set to arrow', () => {
+  it('button is set to arrow', () => {
     document.body.innerHTML = (`
       <fx-carousel button="arrow">
         <div></div>
@@ -297,22 +297,22 @@ describe('Carousel', () => {
     `)
     assert.equal(
       previousArrow.innerHTML.trim(),
-      leftArrow,
+      leftArrow.trim(),
       'left arrow matches'
     )
-    const nextArrow = shadowRoot.querySelector('.previous-slide')
+    const nextArrow = shadowRoot.querySelector('.next-slide')
     const rightArrow = (`
       <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293h-704q-52 0-84.5-37.5t-32.5-90.5v-128q0-53 32.5-90.5t84.5-37.5h704l-293-294q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z" fill="#fff"></path></svg>
     `)
     assert.equal(
       nextArrow.innerHTML.trim(),
-      rightArrow,
+      rightArrow.trim(),
       'right arrow matches'
     )
   })
 
 
-  it.only('button is set to arrow-circle', () => {
+  it('button is set to arrow-circle', () => {
     document.body.innerHTML = (`
       <fx-carousel button="arrow-circle">
         <div></div>
@@ -329,18 +329,45 @@ describe('Carousel', () => {
     `)
     assert.equal(
       previousArrow.innerHTML.trim(),
-      leftArrow,
+      leftArrow.trim(),
       'left arrow-circle matches'
     )
-    const nextArrow = shadowRoot.querySelector('.previous-slide')
+    const nextArrow = shadowRoot.querySelector('.next-slide')
     const rightArrow = (`
       <svg width="50" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1280 896q0 14-9 23l-320 320q-9 9-23 9-13 0-22.5-9.5t-9.5-22.5v-192h-352q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h352v-192q0-14 9-23t23-9q12 0 24 10l319 319q9 9 9 23zm160 0q0-148-73-273t-198-198-273-73-273 73-198 198-73 273 73 273 198 198 273 73 273-73 198-198 73-273zm224 0q0 209-103 385.5t-279.5 279.5-385.5 103-385.5-103-279.5-279.5-103-385.5 103-385.5 279.5-279.5 385.5-103 385.5 103 279.5 279.5 103 385.5z" fill="#fff"></path></svg>
     `)
     assert.equal(
       nextArrow.innerHTML.trim(),
-      rightArrow,
+      rightArrow.trim(),
       'right arrow-circle matches'
     )
+  })
+
+
+  it.only('default indicator is circles', () => {
+    document.body.innerHTML = (`
+      <fx-carousel>
+        <div></div>
+        <div></div>
+      </fx-carousel>
+    `)
+    const carousel = document.querySelector('fx-carousel')
+    const shadowRoot = carousel.shadowRoot
+    const indicators = shadowRoot.querySelector('.slide-indicator')
+    Array.from(indicators.children).forEach((indicator, index) => {
+      if (index === carousel.slideIndex)
+        assert(
+          indicator.innerHTML,
+          carousel.activeIndicator(),
+          'active slide indicator is filled circle'
+        )
+      else
+        assert(
+          indicator.innerHTML,
+          carousel.inactiveIndicator(),
+          'inactive slide indicator is empty circle'
+        )
+    })
   })
 
 })
