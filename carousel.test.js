@@ -17,7 +17,7 @@ describe('Carousel', () => {
   })
 
 
-  it.only('click next button', () => {
+  it('click next button', () => {
     document.body.innerHTML = (`
       <fx-carousel>
         <div></div>
@@ -344,7 +344,7 @@ describe('Carousel', () => {
   })
 
 
-  it.only('default indicator is circles', () => {
+  it('default indicator is circles', () => {
     document.body.innerHTML = (`
       <fx-carousel>
         <div></div>

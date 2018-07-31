@@ -33,6 +33,17 @@ class FXCarousel extends HTMLElement {
 
 
   render() {
+    
+    const previousArrow = (
+      arrows[this.getAttribute('button') + '_previous'] ||
+      arrows['caret_previous']
+    )
+
+    const nextArrow = (
+      arrows[this.getAttribute('button') + '_next'] ||
+      arrows['caret_next']
+    )
+
     this.vnode = Snabbdom.patch(
       this.vnode,
       <div>
@@ -43,18 +54,14 @@ class FXCarousel extends HTMLElement {
         />
 
         { (this.slideIndex > 0 || this.loop) &&
-          <div className="previous-slide" on-click={ this.goToPrevious } props-innerHTML={ 
-              arrows[this.getAttribute('button')] === undefined
-                ? arrows['default'].previous
-                : arrows[this.getAttribute('button')].previous }>
+          <div className="previous-slide" on-click={ this.goToPrevious }>
+            <div props-innerHTML={ previousArrow } />
           </div>
         }
 
         { (this.slideIndex < this.children.length - 1 || this.loop) &&
-          <div className="next-slide" on-click={ this.goToNext } props-innerHTML={
-              arrows[this.getAttribute('button')] === undefined
-                ? arrows['default'].next
-                : arrows[this.getAttribute('button')].next }>
+          <div className="next-slide" on-click={ this.goToNext }>
+            <div props-innerHTML={ nextArrow } />
           </div>
         }
 
@@ -72,6 +79,7 @@ class FXCarousel extends HTMLElement {
         </div>
       </div>
     )
+
   }
 
 
