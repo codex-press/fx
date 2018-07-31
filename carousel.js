@@ -2,6 +2,7 @@
 import * as animate from '/parent/core/animate.js'
 import Snabbdom from '/parent/lib/snabbdom.js'
 import NotReact from './lib/snabbdom-pragma.js'
+import { arrows, indicators } from './carousel-svgs.js'
 
 
 class FXCarousel extends HTMLElement {
@@ -42,14 +43,18 @@ class FXCarousel extends HTMLElement {
         />
 
         { (this.slideIndex > 0 || this.loop) &&
-          <div className="previous-slide" on-click={ this.goToPrevious }>
-            { this.previousButton() }
+          <div className="previous-slide" on-click={ this.goToPrevious } props-innerHTML={ 
+              arrows[this.getAttribute('button')] === undefined
+                ? arrows['default'].previous
+                : arrows[this.getAttribute('button')].previous }>
           </div>
         }
 
         { (this.slideIndex < this.children.length - 1 || this.loop) &&
-          <div className="next-slide" on-click={ this.goToNext }>
-            { this.nextButton() }
+          <div className="next-slide" on-click={ this.goToNext } props-innerHTML={
+              arrows[this.getAttribute('button')] === undefined
+                ? arrows['default'].next
+                : arrows[this.getAttribute('button')].next }>
           </div>
         }
 

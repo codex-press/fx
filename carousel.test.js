@@ -17,7 +17,7 @@ describe('Carousel', () => {
   })
 
 
-  it('click next button', () => {
+  it.only('click next button', () => {
     document.body.innerHTML = (`
       <fx-carousel>
         <div></div>
@@ -28,8 +28,8 @@ describe('Carousel', () => {
     const nextSlide = document.querySelector('fx-carousel div + div')
 
     assert.isAtLeast(
-      nextSlide.getBoundingClientRect(),
-      carousel.getBoundingClientRect(),
+      nextSlide.getBoundingClientRect().left,
+      carousel.getBoundingClientRect().right,
       'second slide starts at the right of carousel'
     )
 
@@ -146,7 +146,7 @@ describe('Carousel', () => {
     assert.equal(
       carousel.slideIndex,
       2,
-      'slideIndex is still 3'
+      'slideIndex is still 2'
     )
   })
 
@@ -353,21 +353,19 @@ describe('Carousel', () => {
     `)
     const carousel = document.querySelector('fx-carousel')
     const shadowRoot = carousel.shadowRoot
-    const indicators = shadowRoot.querySelector('.slide-indicator')
-    Array.from(indicators.children).forEach((indicator, index) => {
-      if (index === carousel.slideIndex)
-        assert(
-          indicator.innerHTML,
-          carousel.activeIndicator(),
-          'active slide indicator is filled circle'
-        )
-      else
-        assert(
-          indicator.innerHTML,
-          carousel.inactiveIndicator(),
-          'inactive slide indicator is empty circle'
-        )
-    })
+    const indicators = Array.from(shadowRoot.querySelector('.slide-indicator').children)
+    const firstSlide = indicators[0]
+    const secondSlide = indicators[1]
+    assert(
+      firstSlide.innerHTML,
+      carousel.activeIndicator(),
+      'active slide indicator is filled circle'
+    )
+    assert(
+      secondSlide.innerHTML,
+      carousel.inactiveIndicator(),
+      'inactive slide indicator is empty circle'
+    )
   })
 
 })
