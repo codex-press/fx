@@ -1,141 +1,84 @@
 /* @jsx NotReact.createElement */
 import * as animate from '/parent/core/animate.js'
-import Snabbdom from '/parent/lib/snabbdom.js'
+import Snabbdom from './lib/snabbdom.js'
 import NotReact from './lib/snabbdom-pragma.js'
-import { arrows, indicators } from './carousel-svgs.js'
+import { arrows, indicators } from './carousel-icons.js'
 
+const INDICATORS = [ 'circles', 'dashes', 'rings', 'plus' ]
+const DEFAULT_INDICATOR = 'circles'
+
+const BUTTONS = [ 'caret', 'circle', 'arrow', 'circle-arrow' ]
+const DEFAULT_BUTTON = 'caret'
 
 class FXCarousel extends HTMLElement {
 
   constructor() {
     super()
-    this._slideIndex = 0
-    this._slidePosition = 0
-    this._loop = false
     this.goToNext = this.goToNext.bind(this)
     this.goToPrevious = this.goToPrevious.bind(this)
-    // this.goToSlide = this.goToSlide.bind(this, i)
-    this.saveSlidePositions = this.saveSlidePositions.bind(this)
+    this._slideIndex = 0
+    this._position = 0
+    this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
     window.addEventListener('resize', () => {
-      this.saveSlidePositions()
-      this.renderSlides()
+      this._saveSlideOffsets()
+      this._renderSlides()
     })
     this.attachShadow({ mode: 'open' })
-    this.vnode = document.createElement('div')
-    this.shadowRoot.appendChild(this.vnode)
-    this.render()
+    this._vnode = document.createElement('div')
+    this.shadowRoot.appendChild(this._vnode)
+    this._render()
   }
 
 
   connectedCallback() {
-    this.saveSlidePositions()
-    this.renderSlides()
-  }
-
-
-  render() {
-    
-    const previousArrow = (
-      arrows[this.getAttribute('button') + '_previous'] ||
-      arrows['caret_previous']
-    )
-
-    const nextArrow = (
-      arrows[this.getAttribute('button') + '_next'] ||
-      arrows['caret_next']
-    )
-
-    const activeIndicator = (
-      indicators[this.getAttribute('indicator') + '_active'] ||
-      indicators['circles_active']
-    )
-
-    const inactiveIndicator = (
-      indicators[this.getAttribute('indicator') + '_inactive'] ||
-      indicators['circles_inactive']
-    )
-
-    this.vnode = Snabbdom.patch(
-      this.vnode,
-      <div>
-        <link
-          rel="stylesheet"
-          href="/fx/carousel.css"
-          on-load={ this.saveSlidePositions }
-        />
-
-        { (this.slideIndex > 0 || this.loop) &&
-          <div className="previous-slide" on-click={ this.goToPrevious }>
-            <div props-innerHTML={ previousArrow } />
-          </div>
-        }
-
-        { (this.slideIndex < this.children.length - 1 || this.loop) &&
-          <div className="next-slide" on-click={ this.goToNext }>
-            <div props-innerHTML={ nextArrow } />
-          </div>
-        }
-
-        <div className="slide-indicator">
-          { Array.from(this.children).map((el, i) => 
-              i === this.slideIndex ?
-              <div props-innerHTML={ activeIndicator } /> :
-              <div
-                props-innerHTML={ inactiveIndicator }
-                on-click={ this.goToSlide.bind(this, i) }
-              />
-            )
-          }
-        </div>
-
-        <div className="strip">
-          <slot></slot>
-        </div>
-      </div>
-    )
-
+    this._saveSlideOffsets()
+    this._renderSlides()
   }
 
 
   static get observedAttributes() {
-    return ['button', 'loop', 'indicator']
+    return [ 'button', 'loop', 'indicator' ]
   }
 
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'loop' && (newValue || newValue === '')) {
-      this._loop = true
-    }
-    this.render()
+    this._render()
   }
 
 
   get loop() {
-    return this._loop
+    return this.hasAttribute('loop')
   }
 
 
   set loop(value) {
-    this._loop = value
+    if (value)
+      this.setAttribute('loop', '')
+    else
+      this.removeAttribute('loop')
   }
 
 
   get indicator() {
-    return this.getAttribute('indicator')
+    const value = this.getAttribute('indicator')
+    return INDICATORS.includes(value) ? value : DEFAULT_INDICATOR
   }
 
 
   set indicator(value) {
+    value = INDICATORS.includes(value) ? value : DEFAULT_INDICATOR
     this.setAttribute('indicator', value)
   }
 
 
   get button() {
-    return this.getAttribute('button')
+    const value = this.getAttribute('button')
+    return BUTTONS.includes(value) ? value : DEFAULT_BUTTON
   }
 
 
   set button(value) {
+    value = BUTTONS.includes(value) ? value : DEFAULT_BUTTON
     this.setAttribute('button', value)
   }
 
@@ -148,15 +91,16 @@ class FXCarousel extends HTMLElement {
   set slideIndex(value) {
     if (!Number.isInteger(value))
       throw TypeError('slideIndex must be an integer')
-    this._slideIndex = Math.max(0, Math.min(value, this.children.length - 1))
-    console.log('sI', this._slideIndex)
-    if (this._slideIndex === 0 || this.children.length - 1)
-      this.render()
-    const ease = animate.cubicOut(this._slidePosition, this._slideIndex)
+    value  = Math.max(0, Math.min(value, this.children.length - 1))
+    if (value === this._slideIndex)
+      return
+    this._slideIndex = value
+    this._render() // renders everything except the slides
+    const ease = animate.cubicOut(this._position, this._slideIndex)
     const duration = 300
     const tick = time => {
-      this._slidePosition = ease(time)
-      this.renderSlides()
+      this._position = ease(time)
+      this._renderSlides()
     }
     if (this._timer)
       this._timer.cancel()
@@ -164,54 +108,92 @@ class FXCarousel extends HTMLElement {
   }
 
 
-  saveSlidePositions() {
-    const thisLeft = this.getBoundingClientRect().left
-    this._slidePositions = Array.from(this.children).map(slide => {
-      slide.style.transform = 'none'
-      const left = slide.getBoundingClientRect().left - thisLeft
-      slide.style.transform = ''
-      return left
-    })
+  goToNext() {
+    if (this.slideIndex === this.children.length - 1 && this.loop)
+      this.slideIndex = 0
+    else
+      this.slideIndex += 1
   }
 
 
-  renderSlides() {
+  goToPrevious() {
+    if (this.slideIndex === 0 && this.loop)
+      this.slideIndex = this.children.length - 1
+    else
+      this.slideIndex -= 1
+  }
+
+
+  _render() {
+    const { loop, button, indicator, slideIndex, children } = this
+    const previousIcon = arrows[button + 'Previous']
+    const nextIcon = arrows[button + 'Next']
+    const activeIcon = indicators[indicator + 'Active']
+    const inactiveIcon = indicators[indicator + 'Inactive']
+
+    this._vnode = Snabbdom.patch(
+      this._vnode,
+      <div>
+        <link
+          rel="stylesheet"
+          href="/fx/carousel.css"
+          on-load={ this._saveSlideOffsets }
+        />
+
+        <div
+          className="previous-slide"
+          hidden={ !loop && slideIndex === 0 }
+          on-click={ this.goToPrevious }
+          props-innerHTML={ previousIcon }
+        />
+
+        <div
+          className="next-slide"
+          hidden={ !loop && slideIndex === children.length - 1 }
+          on-click={ this.goToNext }
+          props-innerHTML={ nextIcon }
+        />
+
+        <div className="slide-indicator">
+          { Array.from(children).map((el, i) => 
+            <div
+              on-click={ () => this.slideIndex = i }
+              props-innerHTML={ i === slideIndex ? activeIcon : inactiveIcon }
+            />)
+          }
+        </div>
+
+        <div className="strip">
+          <slot></slot>
+        </div>
+
+      </div>
+    )
+    
+  }
+
+
+  _saveSlideOffsets() {
+    this._slideOffsets = Array.from(this.children).map(slide => slide.offsetLeft)
+  }
+
+
+  _renderSlides() {
     const width = this.clientWidth
-    const pos = this._slidePosition - Math.floor(this._slidePosition)
+    const pos = this._position - Math.floor(this._position)
     Array.from(this.children).forEach((slide, index) => {
-      const left = this._slidePositions[index]
-      if (index == this._slidePosition)
+      const left = this._slideOffsets[index]
+      if (index == this._position)
         slide.style.transform = `translateX(${ -left }px)`
-      else if (index == Math.floor(this._slidePosition))
+      else if (index == Math.floor(this._position))
         slide.style.transform = `translateX(${ - Math.round(pos * width) - left }px)`
-      else if (index == Math.ceil(this._slidePosition))
+      else if (index == Math.ceil(this._position))
         slide.style.transform = `translateX(${ width - Math.round(pos * width) - left }px)`
       else
         slide.style.transform = 'translateX(100vw)'
     })
   }
 
-
-  goToNext() {
-    if (this.slideIndex === this.children.length - 1 && !this.loop)
-      return
-    this.slideIndex === this.children.length - 1
-      ? this.slideIndex = 0
-      : this.slideIndex += 1
-  }
-
-
-  goToPrevious() {
-    if (this.slideIndex === 0 && !this.loop)
-      return
-    this.slideIndex === 0
-      ? this.slideIndex = this.children.length - 1
-      : this.slideIndex -= 1
-  }
-
-  goToSlide(index) {
-    this.slideIndex = index
-  }
 
 }
 

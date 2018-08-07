@@ -26,13 +26,13 @@
   cursor: pointer;
 }
 
+.previous-slide[hidden], .next-slide[hidden] {
+  display: none;
+}
+
 .next-slide {
   right: 0;
   justify-content: flex-end;
-}
-
-.hidden-button {
-  display: none;
 }
 
 .slide-indicator {
