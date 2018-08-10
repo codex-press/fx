@@ -18,6 +18,8 @@ class FXCarousel extends HTMLElement {
     this.goToPrevious = this.goToPrevious.bind(this)
     this._slideIndex = 0
     this._position = 0
+    this._buttonColor = '#FFFFFF'
+    this._indicatorColor = '#FFFFFF'
     this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
     window.addEventListener('resize', () => {
       this._saveSlideOffsets()
@@ -37,7 +39,7 @@ class FXCarousel extends HTMLElement {
 
 
   static get observedAttributes() {
-    return [ 'button', 'loop', 'indicator' ]
+    return [ 'button', 'button-color', 'loop', 'indicator', 'indicator-color' ]
   }
 
 
@@ -48,6 +50,29 @@ class FXCarousel extends HTMLElement {
 
   get loop() {
     return this.hasAttribute('loop')
+  }
+
+
+  set buttonColor(value) {
+    this.setAttribute('button-color', value)
+    this.style.setProperty('--button-color', value)
+  }
+
+
+  get buttonColor() {
+    return this.getAttribute('button-color')
+  }
+
+
+
+  set indicatorColor(value) {
+    this.setAttribute('indicator-color', value)
+    this.style.setProperty('--indicator-color', value)
+  }
+
+
+  get indicatorColor() {
+    return this.getAttribute('indicator-color')
   }
 
 
@@ -174,7 +199,8 @@ class FXCarousel extends HTMLElement {
 
 
   _saveSlideOffsets() {
-    this._slideOffsets = Array.from(this.children).map(slide => slide.offsetLeft)
+    this._slideOffsets = Array.from(this.children)
+      .map(slide => Math.max(0, slide.offsetLeft))
   }
 
 
@@ -184,7 +210,7 @@ class FXCarousel extends HTMLElement {
     Array.from(this.children).forEach((slide, index) => {
       const left = this._slideOffsets[index]
       if (index == this._position)
-        slide.style.transform = `translateX(${ -left }px)`
+        slide.style.transform = -left < 0 ? 0 : `translateX(${ -left }px)`
       else if (index == Math.floor(this._position))
         slide.style.transform = `translateX(${ - Math.round(pos * width) - left }px)`
       else if (index == Math.ceil(this._position))

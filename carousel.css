@@ -4,6 +4,11 @@
   overflow: hidden;
 }
 
+:root {
+  --button-color: white;
+  --indicator-color: white;
+}
+
 .strip {
   position: relative;
   display: flex;
@@ -24,6 +29,11 @@
   height: 100%;
   align-items: center;
   cursor: pointer;
+}
+
+.previous-slide svg path,
+.next-slide svg path {
+  fill: var(--button-color, white);
 }
 
 .previous-slide[hidden], .next-slide[hidden] {
@@ -48,4 +58,8 @@
 .slide-indicator svg {
   margin: 0 0.5rem;
   cursor: pointer;
+}
+
+.slide-indicator svg path {
+  fill: var(--indicator-color, white);
 }
