@@ -18,8 +18,6 @@ class FXCarousel extends HTMLElement {
     this.goToPrevious = this.goToPrevious.bind(this)
     this._slideIndex = 0
     this._position = 0
-    this._buttonColor = '#FFFFFF'
-    this._indicatorColor = '#FFFFFF'
     this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
     window.addEventListener('resize', () => {
       this._saveSlideOffsets()
@@ -39,7 +37,7 @@ class FXCarousel extends HTMLElement {
 
 
   static get observedAttributes() {
-    return [ 'button', 'button-color', 'loop', 'indicator', 'indicator-color' ]
+    return [ 'button', 'loop', 'indicator' ]
   }
 
 
@@ -50,29 +48,6 @@ class FXCarousel extends HTMLElement {
 
   get loop() {
     return this.hasAttribute('loop')
-  }
-
-
-  set buttonColor(value) {
-    this.setAttribute('button-color', value)
-    this.style.setProperty('--button-color', value)
-  }
-
-
-  get buttonColor() {
-    return this.getAttribute('button-color')
-  }
-
-
-
-  set indicatorColor(value) {
-    this.setAttribute('indicator-color', value)
-    this.style.setProperty('--indicator-color', value)
-  }
-
-
-  get indicatorColor() {
-    return this.getAttribute('indicator-color')
   }
 
 
