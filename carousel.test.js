@@ -398,25 +398,18 @@ describe('Carousel', () => {
   })
 
 
-  it('add new slide', () => {
-    const clock = sinon.useFakeTimers({
-      shouldAdvanceTime: true
-    })
-
+  it('responds to changes in slides', done => {
     const carousel = document.querySelector('fx-carousel')
     const shadowRoot = carousel.shadowRoot
-    const newSlide = document.createElement('div')
-    carousel.appendChild(newSlide)
+    carousel.appendChild(document.createElement('div'))
     setTimeout(() => {
-      const newIndicatorCount = indicators.length
       assert.equal(
         4,
-        shadowRoot.querySelector('.slide-indicator').children,
-        'newSlideCount is one more than original slide count'
+        shadowRoot.querySelector('.slide-indicator').children.length,
+        'has the correct number of indicators'
       )
+      done()
     })
-
-    clock.restore()
   })
 
 })
