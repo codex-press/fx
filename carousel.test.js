@@ -5,9 +5,6 @@ import * as animate from '/parent/core/animate.js'
 
 describe('Carousel', () => {
 
-  const clock = sinon.useFakeTimers()
-
-
   beforeEach(done => {
     document.body.innerHTML = (`
       <fx-carousel>
@@ -33,6 +30,7 @@ describe('Carousel', () => {
 
 
   it('click next button', () => {
+    const clock = sinon.useFakeTimers()
     const carousel = document.querySelector('fx-carousel')
     const nextSlide = document.querySelector('fx-carousel div + div')
 
@@ -52,10 +50,13 @@ describe('Carousel', () => {
       carousel.getBoundingClientRect().left,
       'second slide is in view'
     )
+
+    clock.restore()
   })
 
 
   it('click previous button', () => {
+    const clock = sinon.useFakeTimers()
     const carousel = document.querySelector('fx-carousel')
     carousel.slideIndex = 1
     const slide = document.querySelector('fx-carousel div')
@@ -78,6 +79,8 @@ describe('Carousel', () => {
       carousel.getBoundingClientRect().left,
       'first slide is in view'
     )
+
+    clock.restore()
   })
 
 
@@ -395,19 +398,25 @@ describe('Carousel', () => {
   })
 
 
-  it.only('add new slide', () => {
+  it('add new slide', () => {
+    const clock = sinon.useFakeTimers({
+      shouldAdvanceTime: true
+    })
+
     const carousel = document.querySelector('fx-carousel')
     const shadowRoot = carousel.shadowRoot
-    const indicators = shadowRoot.querySelector('.slide-indicator').children
-    const indicatorCount = indicators.length
     const newSlide = document.createElement('div')
     carousel.appendChild(newSlide)
-    const newIndicatorCount = indicators.length
-    assert.equal(
-      indicatorCount + 1,
-      newIndicatorCount,
-      'newSlideCount is one more than original slide count'
-    )
+    setTimeout(() => {
+      const newIndicatorCount = indicators.length
+      assert.equal(
+        4,
+        shadowRoot.querySelector('.slide-indicator').children,
+        'newSlideCount is one more than original slide count'
+      )
+    })
+
+    clock.restore()
   })
 
 })
