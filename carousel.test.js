@@ -45,9 +45,10 @@ describe('Carousel', () => {
 
     clock.tick(320)
 
-    assert.equal(
+    assert.closeTo(
       nextSlide.getBoundingClientRect().left,
       carousel.getBoundingClientRect().left,
+      0.5,
       'second slide is in view'
     )
 
