@@ -124,6 +124,12 @@ class FXCarousel extends HTMLElement {
   }
 
 
+  slotChange() {
+    console.log('slotChange')
+    this._render
+  }
+
+
   _render() {
     const { loop, button, indicator, slideIndex, children } = this
     const previousIcon = arrows[button + 'Previous']
@@ -164,7 +170,7 @@ class FXCarousel extends HTMLElement {
         </div>
 
         <div className="strip">
-          <slot></slot>
+          <slot on-slotchange={ () => this._render() }></slot>
         </div>
 
       </div>

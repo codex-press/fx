@@ -395,4 +395,19 @@ describe('Carousel', () => {
   })
 
 
+  it.only('add new slide', () => {
+    const carousel = document.querySelector('fx-carousel')
+    const shadowRoot = carousel.shadowRoot
+    const indicators = shadowRoot.querySelector('.slide-indicator').children
+    const indicatorCount = indicators.length
+    const newSlide = document.createElement('div')
+    carousel.appendChild(newSlide)
+    const newIndicatorCount = indicators.length
+    assert.equal(
+      indicatorCount + 1,
+      newIndicatorCount,
+      'newSlideCount is one more than original slide count'
+    )
+  })
+
 })
