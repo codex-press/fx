@@ -413,4 +413,37 @@ describe('Carousel', () => {
     })
   })
 
+
+  it('touch event to next slide', () => {
+    const carousel = document.querySelector('fx-carousel')
+    const shadowRoot = carousel.shadowRoot
+    const container = shadowRoot.children[0]
+
+    const touchObj1 = new Touch({
+      identifier: Date.now(),
+      target: container,
+      clientX: 0
+    })
+    const touchObj2 = new Touch({
+      identifier: Date.now(),
+      target: container,
+      clientX: -15
+    })
+
+    const touchEventStart = new TouchEvent('touchstart', {
+      touches: [touchObj1],
+      changedTouches: [touchObj1]
+    })
+    const touchEventMove = new TouchEvent('touchmove', {
+      touches: [touchObj2],
+      changedTouches: [touchObj2]
+    })
+    const touchEventEnd = new TouchEvent('touchend')
+
+    container.dispatchEvent(touchEventStart)
+    container.dispatchEvent(touchEventMove)
+    container.dispatchEvent(touchEventEnd)
+
+    assert.equal(carousel.slideIndex, 1, 'slideIndex is 1')
+  })
 })

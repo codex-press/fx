@@ -16,8 +16,13 @@ class FXCarousel extends HTMLElement {
     super()
     this.goToNext = this.goToNext.bind(this)
     this.goToPrevious = this.goToPrevious.bind(this)
+    this.touchStart = this.touchStart.bind(this)
+    this.touchMove = this.touchMove.bind(this)
+    this.touchEnd = this.touchEnd.bind(this)
     this._slideIndex = 0
     this._position = 0
+    this._touchStart = 0
+    this._touchEnd = 0
     this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
     window.addEventListener('resize', () => {
       this._saveSlideOffsets()
@@ -125,8 +130,37 @@ class FXCarousel extends HTMLElement {
 
 
   slotChange() {
-    console.log('slotChange')
     this._render
+  }
+
+
+  touchStart(evt) {
+    console.log(evt)
+    this._touchStart = evt.touches[0].clientX
+    this._touchEnd = evt.touches[0].clientX
+  }
+
+
+  touchMove(evt) {
+    const width = this.clientWidth
+    this._touchEnd = evt.touches[0].clientX
+    const slidePosition = this._touchEnd - this._touchStart
+
+    Array.from(this.children).forEach((slide, index) => {
+      if (index === this._slideIndex) {
+        this._position = this._slideIndex + (slidePosition / width) * -1
+        this._renderSlides()
+      }
+    })
+  }
+
+
+  touchEnd(evt) {
+    if (this._touchEnd === this._touchStart)
+      return
+    this._touchEnd < this._touchStart
+      ? this.slideIndex += 1
+      : this.slideIndex -= 1
   }
 
 
@@ -139,7 +173,11 @@ class FXCarousel extends HTMLElement {
 
     this._vnode = Snabbdom.patch(
       this._vnode,
-      <div>
+      <div
+        on-touchstart={ this.touchStart }
+        on-touchmove={ this.touchMove }
+        on-touchend={ this.touchEnd }
+      >
         <link
           rel="stylesheet"
           href="/fx/carousel.css"
