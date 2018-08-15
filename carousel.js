@@ -14,20 +14,23 @@ class FXCarousel extends HTMLElement {
 
   constructor() {
     super()
+
     this.goToNext = this.goToNext.bind(this)
     this.goToPrevious = this.goToPrevious.bind(this)
-    this.touchStart = this.touchStart.bind(this)
-    this.touchMove = this.touchMove.bind(this)
-    this.touchEnd = this.touchEnd.bind(this)
+    this._render = this._render.bind(this)
+    this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
+
     this._slideIndex = 0
     this._position = 0
-    this._touchStart = 0
-    this._touchEnd = 0
-    this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
-    window.addEventListener('resize', () => {
-      this._saveSlideOffsets()
-      this._renderSlides()
-    })
+    this._lastClientX = undefined
+    this._lastDeltaX = undefined
+
+    window.addEventListener('resize', this._saveSlideOffsets)
+    this.addEventListener('touchstart', this._onTouchStart)
+    this.addEventListener('touchmove', this._onTouchMove)
+    this.addEventListener('touchend', this._onTouchEnd)
+    this.addEventListener('touchcancel', this._onTouchEnd)
+
     this.attachShadow({ mode: 'open' })
     this._vnode = document.createElement('div')
     this.shadowRoot.appendChild(this._vnode)
@@ -37,7 +40,6 @@ class FXCarousel extends HTMLElement {
 
   connectedCallback() {
     this._saveSlideOffsets()
-    this._renderSlides()
   }
 
 
@@ -129,38 +131,22 @@ class FXCarousel extends HTMLElement {
   }
 
 
-  slotChange() {
-    this._render
+  _onTouchStart(event) {
+    this._lastClientX = event.touches[0].clientX
   }
 
 
-  touchStart(evt) {
-    console.log(evt)
-    this._touchStart = evt.touches[0].clientX
-    this._touchEnd = evt.touches[0].clientX
+  _onTouchMove(event) {
+    const deltaX = this._lastClientX - event.touches[0].clientX
+    this._position += deltaX / this.clientWidth
+    this._renderSlides()
+    this._lastClientX = event.touches[0].clientX
+    this._lastDeltaX = deltaX
   }
 
 
-  touchMove(evt) {
-    const width = this.clientWidth
-    this._touchEnd = evt.touches[0].clientX
-    const slidePosition = this._touchEnd - this._touchStart
-
-    Array.from(this.children).forEach((slide, index) => {
-      if (index === this._slideIndex) {
-        this._position = this._slideIndex + (slidePosition / width) * -1
-        this._renderSlides()
-      }
-    })
-  }
-
-
-  touchEnd(evt) {
-    if (this._touchEnd === this._touchStart)
-      return
-    this._touchEnd < this._touchStart
-      ? this.slideIndex += 1
-      : this.slideIndex -= 1
+  _onTouchEnd(event) {
+    this.slideIndex += this._lastDeltaX > 0 ? 1 : -1
   }
 
 
@@ -173,11 +159,8 @@ class FXCarousel extends HTMLElement {
 
     this._vnode = Snabbdom.patch(
       this._vnode,
-      <div
-        on-touchstart={ this.touchStart }
-        on-touchmove={ this.touchMove }
-        on-touchend={ this.touchEnd }
-      >
+      <div>
+
         <link
           rel="stylesheet"
           href="/fx/carousel.css"
@@ -208,7 +191,7 @@ class FXCarousel extends HTMLElement {
         </div>
 
         <div className="strip">
-          <slot on-slotchange={ () => this._render() }></slot>
+          <slot on-slotchange={ this._render }></slot>
         </div>
 
       </div>
@@ -220,6 +203,7 @@ class FXCarousel extends HTMLElement {
   _saveSlideOffsets() {
     this._slideOffsets = Array.from(this.children)
       .map(slide => Math.max(0, slide.offsetLeft))
+    this._renderSlides()
   }
 
 
@@ -228,14 +212,16 @@ class FXCarousel extends HTMLElement {
     const pos = this._position - Math.floor(this._position)
     Array.from(this.children).forEach((slide, index) => {
       const left = this._slideOffsets[index]
+      let x
       if (index == this._position)
-        slide.style.transform = -left < 0 ? 0 : `translateX(${ -left }px)`
+        x = - left + 'px'
       else if (index == Math.floor(this._position))
-        slide.style.transform = `translateX(${ - Math.round(pos * width) - left }px)`
+        x = - Math.round(pos * width) - left + 'px'
       else if (index == Math.ceil(this._position))
-        slide.style.transform = `translateX(${ width - Math.round(pos * width) - left }px)`
+        x = width - Math.round(pos * width) - left + 'px'
       else
-        slide.style.transform = 'translateX(100vw)'
+        x = '100vw'
+      slide.style.transform = `translateX(${ x })`
     })
   }
 

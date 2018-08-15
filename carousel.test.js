@@ -33,7 +33,7 @@ describe('Carousel', () => {
     const clock = sinon.useFakeTimers()
     const carousel = document.querySelector('fx-carousel')
     const nextSlide = document.querySelector('fx-carousel div + div')
-
+    
     assert.isAtLeast(
       nextSlide.getBoundingClientRect().left,
       carousel.getBoundingClientRect().right,
@@ -415,35 +415,23 @@ describe('Carousel', () => {
 
 
   it('touch event to next slide', () => {
-    const carousel = document.querySelector('fx-carousel')
-    const shadowRoot = carousel.shadowRoot
-    const container = shadowRoot.children[0]
+    const identifier = 0
+    const target = document.querySelector('fx-carousel')
 
-    const touchObj1 = new Touch({
-      identifier: Date.now(),
-      target: container,
-      clientX: 0
-    })
-    const touchObj2 = new Touch({
-      identifier: Date.now(),
-      target: container,
-      clientX: -15
-    })
+    target.dispatchEvent(new TouchEvent('touchstart', {
+      touches: [ new Touch({ identifier, target, clientX: 0 }) ]
+    }))
 
-    const touchEventStart = new TouchEvent('touchstart', {
-      touches: [touchObj1],
-      changedTouches: [touchObj1]
-    })
-    const touchEventMove = new TouchEvent('touchmove', {
-      touches: [touchObj2],
-      changedTouches: [touchObj2]
-    })
-    const touchEventEnd = new TouchEvent('touchend')
+    target.dispatchEvent(new TouchEvent('touchmove', {
+      touches: [ new Touch({ identifier, target, clientX: -15 }) ]
+    }))
 
-    container.dispatchEvent(touchEventStart)
-    container.dispatchEvent(touchEventMove)
-    container.dispatchEvent(touchEventEnd)
+    target.dispatchEvent(new TouchEvent('touchend', {
+      changedTouches: [ new Touch({ identifier, target, clientX: -18 }) ]
+    }))
 
-    assert.equal(carousel.slideIndex, 1, 'slideIndex is 1')
+    assert.equal(target.slideIndex, 1, 'slideIndex is 1')
   })
+
+
 })
