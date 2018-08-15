@@ -136,16 +136,16 @@ class FXCarousel extends HTMLElement {
   }
 
   _onWheelEvent(event) {
-    if (this.slideIndex === 0 && !this.loop && event.deltaY < 0)
+    if (this.slideIndex === 0 && !this.loop && event.delta > 0)
       return
     
     if (
       this.slideIndex === this.children.length - 1 &&
-      event.deltaY > 0 && !this.loop
+      event.deltaX < 0 && !this.loop
     )
       return
 
-    this.slideIndex += event.deltaY > 0 ? 1 : -1
+    this.slideIndex += event.deltaX > 0 ? 1 : -1
   }
 
 

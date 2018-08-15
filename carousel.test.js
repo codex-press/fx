@@ -595,25 +595,25 @@ describe('Carousel', () => {
   })
 
 
-it('wheel event to next slide', () => {
+it.only('wheel event to next slide', () => {
     const identifier = 0
     const target = document.querySelector('fx-carousel')
 
     target.dispatchEvent(new WheelEvent('wheel', {
-      deltaY: 55
+      deltaX: 55
     }))
 
     assert.equal(target.slideIndex, 1, 'slideIndex is 1')
   })
 
 
-  it('wheel event to previous slide', () => {
+  it.only('wheel event to previous slide', () => {
     const identifier = 0
     const target = document.querySelector('fx-carousel')
     target.slideIndex = 1
 
     target.dispatchEvent(new WheelEvent('wheel', {
-      deltaY: -55
+      deltaX: -55
     }))
 
     assert.equal(target.slideIndex, 0, 'slideIndex is 0')
