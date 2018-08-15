@@ -85,6 +85,82 @@ describe('Carousel', () => {
   })
 
 
+  it('click next button twice', () => {
+    const clock = sinon.useFakeTimers()
+    const carousel = document.querySelector('fx-carousel')
+    const nextSlide = document.querySelector('fx-carousel div + div + div')
+    
+    assert.isAtLeast(
+      nextSlide.getBoundingClientRect().left,
+      carousel.getBoundingClientRect().right,
+      'second slide is out of view'
+    )
+
+    const shadowRoot = document.querySelector('fx-carousel').shadowRoot
+    shadowRoot.querySelector('.next-slide').click()
+
+    clock.tick(320)
+
+    shadowRoot.querySelector('.next-slide').click()
+
+    assert.isAtLeast(
+      nextSlide.getBoundingClientRect().left,
+      carousel.getBoundingClientRect().right,
+      'second slide is out of view'
+    )
+
+    clock.tick(320)
+
+    assert.closeTo(
+      nextSlide.getBoundingClientRect().left,
+      carousel.getBoundingClientRect().left,
+      1,
+      'second slide is in view'
+    )
+
+    clock.restore()
+  })
+
+
+  it('click previous button twice', () => {
+    const clock = sinon.useFakeTimers()
+    const carousel = document.querySelector('fx-carousel')
+    carousel.slideIndex = 2
+    const slide = document.querySelector('fx-carousel div')
+    
+    clock.tick(320)
+
+    assert.isAtLeast(
+      slide.getBoundingClientRect().left,
+      carousel.getBoundingClientRect().right,
+      'first slide is out of view'
+    )
+
+    const shadowRoot = document.querySelector('fx-carousel').shadowRoot
+    shadowRoot.querySelector('.previous-slide').click()
+
+    clock.tick(320)
+
+    assert.isAtLeast(
+      slide.getBoundingClientRect().left,
+      carousel.getBoundingClientRect().right,
+      'first slide is out of view'
+    )
+
+    shadowRoot.querySelector('.previous-slide').click()
+
+    clock.tick(320)
+
+    assert.equal(
+      slide.getBoundingClientRect().left,
+      carousel.getBoundingClientRect().left,
+      'first slide is in view'
+    )
+
+    clock.restore()
+  })
+
+
   it('goToNext() decreases the slide index', () => {
     const carousel = document.querySelector('fx-carousel')
     carousel.goToNext()
@@ -423,6 +499,47 @@ describe('Carousel', () => {
     }))
 
     target.dispatchEvent(new TouchEvent('touchmove', {
+      touches: [ new Touch({ identifier, target, clientX: -55 }) ]
+    }))
+
+    target.dispatchEvent(new TouchEvent('touchend', {
+      changedTouches: [ new Touch({ identifier, target, clientX: -60 }) ]
+    }))
+
+    assert.equal(target.slideIndex, 1, 'slideIndex is 1')
+  })
+
+
+  it('touch event to previous slide', () => {
+    const identifier = 0
+    const target = document.querySelector('fx-carousel')
+    target.slideIndex = 1
+
+    target.dispatchEvent(new TouchEvent('touchstart', {
+      touches: [ new Touch({ identifier, target, clientX: 0 }) ]
+    }))
+
+    target.dispatchEvent(new TouchEvent('touchmove', {
+      touches: [ new Touch({ identifier, target, clientX: 55 }) ]
+    }))
+
+    target.dispatchEvent(new TouchEvent('touchend', {
+      changedTouches: [ new Touch({ identifier, target, clientX: -60 }) ]
+    }))
+
+    assert.equal(target.slideIndex, 0, 'slideIndex is 0')
+  })
+
+
+  it('doesn\'t move to next slide if within threshold', () => {
+    const identifier = 0
+    const target = document.querySelector('fx-carousel')
+
+    target.dispatchEvent(new TouchEvent('touchstart', {
+      touches: [ new Touch({ identifier, target, clientX: 0 }) ]
+    }))
+
+    target.dispatchEvent(new TouchEvent('touchmove', {
       touches: [ new Touch({ identifier, target, clientX: -15 }) ]
     }))
 
@@ -430,7 +547,76 @@ describe('Carousel', () => {
       changedTouches: [ new Touch({ identifier, target, clientX: -18 }) ]
     }))
 
+    assert.equal(target.slideIndex, 0, 'slideIndex is 0')
+  })
+
+
+  it('doesn\'t move to previous slide if within threshold', () => {
+    const identifier = 0
+    const target = document.querySelector('fx-carousel')
+    target.slideIndex = 1
+
+    target.dispatchEvent(new TouchEvent('touchstart', {
+      touches: [ new Touch({ identifier, target, clientX: 0 }) ]
+    }))
+
+    target.dispatchEvent(new TouchEvent('touchmove', {
+      touches: [ new Touch({ identifier, target, clientX: 15 }) ]
+    }))
+
+    target.dispatchEvent(new TouchEvent('touchend', {
+      changedTouches: [ new Touch({ identifier, target, clientX: 18 }) ]
+    }))
+
     assert.equal(target.slideIndex, 1, 'slideIndex is 1')
+  })
+
+
+  it('slide doesn\'t move on downward finger touch', () => {
+    const identifier = 0
+    const target = document.querySelector('fx-carousel')
+    target.slideIndex = 1
+
+    target.dispatchEvent(new TouchEvent('touchstart', {
+      touches: [ new Touch({ identifier, target, clientX: 0, clientY: 0 }) ]
+    }))
+
+    target.dispatchEvent(new TouchEvent('touchmove', {
+      touches: [ new Touch({ identifier, target, clientX: 55, clientY: 85 }) ]
+    }))
+
+    target.dispatchEvent(new TouchEvent('touchend', {
+      changedTouches: [
+        new Touch({ identifier, target, clientX: 60, clientY: 95 })
+      ]
+    }))
+
+    assert.equal(target.slideIndex, 1, 'slideIndex is 1')
+  })
+
+
+it('wheel event to next slide', () => {
+    const identifier = 0
+    const target = document.querySelector('fx-carousel')
+
+    target.dispatchEvent(new WheelEvent('wheel', {
+      deltaY: 55
+    }))
+
+    assert.equal(target.slideIndex, 1, 'slideIndex is 1')
+  })
+
+
+  it('wheel event to previous slide', () => {
+    const identifier = 0
+    const target = document.querySelector('fx-carousel')
+    target.slideIndex = 1
+
+    target.dispatchEvent(new WheelEvent('wheel', {
+      deltaY: -55
+    }))
+
+    assert.equal(target.slideIndex, 0, 'slideIndex is 0')
   })
 
 

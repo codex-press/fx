@@ -22,14 +22,19 @@ class FXCarousel extends HTMLElement {
 
     this._slideIndex = 0
     this._position = 0
+    this._initialPosition = undefined
+    this._initialClientX = undefined
     this._lastClientX = undefined
     this._lastDeltaX = undefined
+    this._initialClientY = undefined
+    this._lastClientY = undefined
 
     window.addEventListener('resize', this._saveSlideOffsets)
     this.addEventListener('touchstart', this._onTouchStart)
     this.addEventListener('touchmove', this._onTouchMove)
     this.addEventListener('touchend', this._onTouchEnd)
     this.addEventListener('touchcancel', this._onTouchEnd)
+    this.addEventListener('wheel', this._onWheelEvent)
 
     this.attachShadow({ mode: 'open' })
     this._vnode = document.createElement('div')
@@ -130,15 +135,37 @@ class FXCarousel extends HTMLElement {
       this.slideIndex -= 1
   }
 
+  _onWheelEvent(event) {
+    if (this.slideIndex === 0 && !this.loop && event.deltaY < 0)
+      return
+    
+    if (
+      this.slideIndex === this.children.length - 1 &&
+      event.deltaY > 0 && !this.loop
+    )
+      return
+
+    this.slideIndex += event.deltaY > 0 ? 1 : -1
+  }
+
 
   _onTouchStart(event) {
+    this._initialPosition = this._position
+    this._initialClientX = event.touches[0].clientX
     this._lastClientX = event.touches[0].clientX
+    this._initialClientY = event.touches[0].clientY
   }
 
 
   _onTouchMove(event) {
     const deltaX = this._lastClientX - event.touches[0].clientX
     this._position += deltaX / this.clientWidth
+    this._lastClientY = event.touches[0].clientY
+    if (Math.abs(this._lastClientY - this._initialClientY) > 80) {
+      this._position = this._initialPosition
+      this._renderSlides()
+      return
+    }
     this._renderSlides()
     this._lastClientX = event.touches[0].clientX
     this._lastDeltaX = deltaX
@@ -146,7 +173,28 @@ class FXCarousel extends HTMLElement {
 
 
   _onTouchEnd(event) {
-    this.slideIndex += this._lastDeltaX > 0 ? 1 : -1
+    if (Math.abs(this._lastClientY - this._initialClientY) > 100)
+      return
+
+    if (Math.abs(this._lastClientX - this._initialClientX) < 50) {
+      this._position = this._initialPosition
+      this._renderSlides()
+      return
+    }
+
+    if (this.slideIndex === 0 && !this.loop && this._lastDeltaX < 0) {
+      this._position = this._initialPosition
+      this._renderSlides()
+    }
+    else if (
+      this.slideIndex === this.children.length - 1 &&
+      this._lastDeltaX > 0 && !this.loop
+    ) {
+      this._position = this._initialPosition
+      this._renderSlides()
+    }
+    else
+      this.slideIndex += this._lastDeltaX > 0 ? 1 : -1
   }
 
 
