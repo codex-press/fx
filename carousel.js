@@ -3,12 +3,15 @@ import * as animate from '/parent/core/animate.js'
 import Snabbdom from './lib/snabbdom.js'
 import NotReact from './lib/snabbdom-pragma.js'
 import { arrows, indicators } from './carousel-icons.js'
+import { debounce } from '/app/src/utility.js'
 
 const INDICATORS = [ 'circles', 'dashes', 'rings', 'plus' ]
 const DEFAULT_INDICATOR = 'circles'
 
 const BUTTONS = [ 'caret', 'circle', 'arrow', 'circle-arrow' ]
 const DEFAULT_BUTTON = 'caret'
+
+const WHEEL_DELAY = 400
 
 class FXCarousel extends HTMLElement {
 
@@ -19,6 +22,7 @@ class FXCarousel extends HTMLElement {
     this.goToPrevious = this.goToPrevious.bind(this)
     this._render = this._render.bind(this)
     this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
+    this._wheelScroll = this._wheelScroll.bind(this)
 
     this._slideIndex = 0
     this._position = 0
@@ -28,6 +32,9 @@ class FXCarousel extends HTMLElement {
     this._lastDeltaX = undefined
     this._initialClientY = undefined
     this._lastClientY = undefined
+    this._scrollClientX = 0
+    this._scrollClientY = undefined
+    this._wheelEnd = debounce(WHEEL_DELAY, event => { this._wheelScroll(event) })
 
     window.addEventListener('resize', this._saveSlideOffsets)
     this.addEventListener('touchstart', this._onTouchStart)
@@ -35,6 +42,7 @@ class FXCarousel extends HTMLElement {
     this.addEventListener('touchend', this._onTouchEnd)
     this.addEventListener('touchcancel', this._onTouchEnd)
     this.addEventListener('wheel', this._onWheelEvent)
+    this.addEventListener('keydown', this._onKeyboardEvent)
 
     this.attachShadow({ mode: 'open' })
     this._vnode = document.createElement('div')
@@ -135,17 +143,36 @@ class FXCarousel extends HTMLElement {
       this.slideIndex -= 1
   }
 
-  _onWheelEvent(event) {
-    if (this.slideIndex === 0 && !this.loop && event.delta > 0)
-      return
-    
-    if (
-      this.slideIndex === this.children.length - 1 &&
-      event.deltaX < 0 && !this.loop
-    )
-      return
 
-    this.slideIndex += event.deltaX > 0 ? 1 : -1
+  _onKeyboardEvent(event) {
+    if(event.key === 'RightArrow') this.slideIndex =+ 1
+    if(event.key === 'LeftArrow') this.slideIndex =- 1
+  }
+
+
+  _wheelScroll(event) {
+    let angle = Math.abs(Math.atan2(event.deltaY, event.deltaX))
+
+    let isX = (angle < 30 * Math.PI/180 || angle > 150 * Math.PI/180)
+
+    if (isX) {
+      event.preventDefault()
+      this._scrollClientX > 0 ? this.slideIndex += 1 : this.slideIndex -= 1
+    }
+
+    this._scrollClientX = 0
+  }
+
+
+  _onWheelEvent(event) {
+    // this is a scroll by lines (firefox w/ a real wheel)
+    if (event.deltaMode === 1) {
+      event.deltaX *= 24;
+      event.deltaY *= 24;
+    }
+
+    this._wheelEnd(event)
+    this._scrollClientX += event.deltaX
   }
 
 
@@ -182,19 +209,14 @@ class FXCarousel extends HTMLElement {
       return
     }
 
-    if (this.slideIndex === 0 && !this.loop && this._lastDeltaX < 0) {
-      this._position = this._initialPosition
-      this._renderSlides()
-    }
-    else if (
-      this.slideIndex === this.children.length - 1 &&
-      this._lastDeltaX > 0 && !this.loop
-    ) {
-      this._position = this._initialPosition
-      this._renderSlides()
-    }
+
+    if(!this.loop && this.slideIndex !== (0 || this.children.length - 1))
+      this.slideIndex = this._lastDeltaX > 0 ?
+          Math.ceil(this._position) :
+          Math.floor(this._position)
     else
-      this.slideIndex += this._lastDeltaX > 0 ? 1 : -1
+      this._position = this._initialPosition
+      this._renderSlides()
   }
 
 

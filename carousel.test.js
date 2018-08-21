@@ -595,25 +595,81 @@ describe('Carousel', () => {
   })
 
 
-it.only('wheel event to next slide', () => {
-    const identifier = 0
+  it('wheel event to next slide', () => {
+    const clock = sinon.useFakeTimers()
     const target = document.querySelector('fx-carousel')
 
     target.dispatchEvent(new WheelEvent('wheel', {
       deltaX: 55
     }))
 
+    clock.tick(500)
+
     assert.equal(target.slideIndex, 1, 'slideIndex is 1')
   })
 
 
-  it.only('wheel event to previous slide', () => {
-    const identifier = 0
+  it('wheel event to previous slide', () => {
+    const clock = sinon.useFakeTimers()
     const target = document.querySelector('fx-carousel')
     target.slideIndex = 1
 
     target.dispatchEvent(new WheelEvent('wheel', {
       deltaX: -55
+    }))
+
+    clock.tick(500)
+
+    assert.equal(target.slideIndex, 0, 'slideIndex is 0')
+  })
+
+
+  it('wheel event to next doesn\'t progress on last slide', () => {
+    const clock = sinon.useFakeTimers()
+    const target = document.querySelector('fx-carousel')
+    target.slideIndex = 2
+
+    target.dispatchEvent(new WheelEvent('wheel', {
+      deltaX: 55
+    }))
+
+    clock.tick(500)
+
+    assert.equal(target.slideIndex, 2, 'slideIndex is 2')
+  })
+
+
+  it('wheel event doesn\'t move before first slide', () => {
+    const clock = sinon.useFakeTimers()
+    const target = document.querySelector('fx-carousel')
+
+    target.dispatchEvent(new WheelEvent('wheel', {
+      deltaX: -55
+    }))
+
+    clock.tick(500)
+
+    assert.equal(target.slideIndex, 0, 'slideIndex is 0')
+  })
+
+
+  it('keyboard right arrow key to next slide', () => {
+    const target = document.querySelector('fx-carousel')
+
+    target.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'RightArrow'
+    }))
+
+    assert.equal(target.slideIndex, 1, 'slideIndex is 1')
+  })
+
+
+  it('keyboard left arrow key to previous slide', () => {
+    const target = document.querySelector('fx-carousel')
+    target.slideIndex = 1
+
+    target.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'LeftArrow'
     }))
 
     assert.equal(target.slideIndex, 0, 'slideIndex is 0')
