@@ -11,7 +11,7 @@ const DEFAULT_INDICATOR = 'circles'
 const BUTTONS = [ 'caret', 'circle', 'arrow', 'circle-arrow' ]
 const DEFAULT_BUTTON = 'caret'
 
-const WHEEL_DELAY = 400
+const WHEEL_DELAY = 300
 
 class FXCarousel extends HTMLElement {
 
@@ -33,8 +33,11 @@ class FXCarousel extends HTMLElement {
     this._initialClientY = undefined
     this._lastClientY = undefined
     this._scrollClientX = 0
-    this._scrollClientY = undefined
-    this._wheelEnd = debounce(WHEEL_DELAY, event => { this._wheelScroll(event) })
+    this._initialScroll = 0
+    this._positionChange = 0
+    this._wheelEnd = debounce(
+      WHEEL_DELAY, event => { this._wheelScroll(event) }
+    )
 
     window.addEventListener('resize', this._saveSlideOffsets)
     this.addEventListener('touchstart', this._onTouchStart)
@@ -157,7 +160,23 @@ class FXCarousel extends HTMLElement {
 
     if (isX) {
       event.preventDefault()
-      this._scrollClientX > 0 ? this.slideIndex += 1 : this.slideIndex -= 1
+      let slideScroll = (
+        this._scrollClientX / this.clientWidth > 0 ?
+          Math.ceil(this._scrollClientX / this.clientWidth) :
+          Math.floor(this._scrollClientX / this.clientWidth)
+      )
+      const newIndex = this.slideIndex + slideScroll
+
+      if(newIndex > this.children.length - 1) {
+        this.slideIndex = this.children.length - 1
+        this._position = this.children.length - 1
+      } else if(newIndex < 0) {
+        this.slideIndex = 0
+        this._position = 0
+      }
+      else
+        this.slideIndex = newIndex
+      this._renderSlides()
     }
 
     this._scrollClientX = 0
@@ -171,8 +190,11 @@ class FXCarousel extends HTMLElement {
       event.deltaY *= 24;
     }
 
-    this._wheelEnd(event)
     this._scrollClientX += event.deltaX
+    this._positionChange += event.deltaX / this.clientWidth
+    this._position += event.deltaX / this.clientWidth
+    this._renderSlides()
+    this._wheelEnd(event)
   }
 
 
@@ -208,7 +230,6 @@ class FXCarousel extends HTMLElement {
       this._renderSlides()
       return
     }
-
 
     if(!this.loop && this.slideIndex !== (0 || this.children.length - 1))
       this.slideIndex = this._lastDeltaX > 0 ?
