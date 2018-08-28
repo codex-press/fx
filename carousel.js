@@ -20,19 +20,14 @@ class FXCarousel extends HTMLElement {
     this.goToPrevious = this.goToPrevious.bind(this)
     this._render = this._render.bind(this)
     this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
-    this._onWheelEnd = this._onWheelEnd.bind(this)
+    this._onWheelEnd = debounce(400, this._onWheelEnd, this)
 
-    this._slideIndex = 0
     this._position = 0
-    this._initialPosition = undefined
-    this._initialClientX = undefined
+
     this._lastClientX = undefined
-    this._lastDeltaX = undefined
-    this._initialClientY = undefined
     this._lastClientY = undefined
-    this._scrollClientX = 0
-    this._initialScroll = 0
-    this._onWheelEnd = debounce(300, this._onWheelEnd)
+    this._lastDeltaX = undefined
+    this._touchThresholdMet = false
 
     window.addEventListener('resize', this._saveSlideOffsets)
     this.addEventListener('touchstart', this._onTouchStart)
@@ -102,8 +97,7 @@ class FXCarousel extends HTMLElement {
 
 
   get slideIndex() {
-    return this._slideIndex
-    // Math.round(this._position)
+    return Math.round(this._position)
   }
 
 
@@ -111,20 +105,18 @@ class FXCarousel extends HTMLElement {
   set slideIndex(value) {
     if (!Number.isInteger(value))
       throw TypeError('slideIndex must be an integer')
-    value  = Math.max(0, Math.min(value, this.children.length - 1))
-    // if (value === this._slideIndex)
-    //   return
-    this._slideIndex = value
-    this._render() // renders everything except the slides
-    const ease = animate.cubicOut(this._position, this._slideIndex)
-    const duration = 300
-    const tick = time => {
-      this._position = ease(time)
-      this._renderSlides()
-    }
-    if (this._timer)
-      this._timer.cancel()
-    this._timer = animate.timer({ duration, tick })
+    value  = clamp(value, 0, this.children.length - 1)
+    if (value === this._position) return
+    const ease = animate.cubicOut(this._position, value)
+    if (this._timer && this._timer.active) this._timer.cancel()
+    this._timer = animate.timer({
+      duration: 300,
+      tick: time => {
+        this._position = ease(time)
+        this._renderSlides()
+      },
+      done: () => this._render()
+    })
   }
 
 
@@ -151,95 +143,66 @@ class FXCarousel extends HTMLElement {
 
 
   _onWheel(event) {
+    if (this._timer && this._timer.active) this._timer.cancel()
+
+    let { deltaX, deltaY } = event
+
     // this is a scroll by lines (firefox w/ a real wheel)
     if (event.deltaMode === 1) {
-      event.deltaX *= 24;
-      event.deltaY *= 24;
+      deltaX *= 24;
+      deltaY *= 24;
     }
 
-    let angle = Math.abs(Math.atan2(event.deltaY, event.deltaX))
-
-    let isX = (angle < 30 * Math.PI/180 || angle > 150 * Math.PI/180)
-
-    if (isX) {
+    if (isX(deltaX, deltaY)) {
       event.preventDefault()
       let positionMultiplier = 1
-      this._lastDeltaX = event.deltaX
-      if (this.slideIndex <= 0 && this._lastDeltaX < 0) return
-      if (this.slideIndex >= this.children.length - 1 && this._lastDeltaX > 0)
-        return
-      if (this._position < 0 || this._position > this.children.length - 1)
-        return
-      this._position += this._lastDeltaX / this.clientWidth
+      this._position += deltaX / this.clientWidth
+      this._lastDeltaX = deltaX
       this._renderSlides()
-      this._onWheelEnd(event)
+      this._onWheelEnd()
     }
   }
 
 
-  _onWheelEnd(event) {
-    const newIndex =(
-      this._lastDeltaX > 0 ?
+  _onWheelEnd() {
+    this.slideIndex = this._lastDeltaX > 0 ?
         Math.ceil(this._position) :
         Math.floor(this._position)
-    )
-
-    if (newIndex > this.children.length - 1) {
-      this.slideIndex = this.children.length - 1
-      this._position = this.children.length - 1
-    } 
-    else if (newIndex < 0) {
-      this.slideIndex = 0
-      this._position = 0
-    }
-    else
-      this.slideIndex = newIndex
-
-    this._renderSlides()
-    this._lastDeltaX = 0
   }
 
 
   _onTouchStart(event) {
-    this._initialPosition = this._position
-    this._initialClientX = event.touches[0].clientX
+    if (this._timer && this._timer.active) this._timer.cancel()
     this._lastClientX = event.touches[0].clientX
-    this._initialClientY = event.touches[0].clientY
+    this._lastClientY = event.touches[0].clientY
+    this._touchThresholdMet = false
   }
 
 
   _onTouchMove(event) {
     const deltaX = this._lastClientX - event.touches[0].clientX
-    this._position += deltaX / this.clientWidth
-    this._lastClientY = event.touches[0].clientY
-    if (Math.abs(this._lastClientY - this._initialClientY) > 80) {
-      this._position = this._initialPosition
+    const deltaY = this._lastClientY - event.touches[0].clientY
+
+    this._touchThresholdMet = this._touchThresholdMet || Math.abs(deltaX) > 10
+    if (!this._touchThresholdMet) return
+    
+    if (isX(deltaX, deltaY)) {
+      event.preventDefault()
+      this._position += deltaX / this.clientWidth
       this._renderSlides()
-      return
     }
-    this._renderSlides()
+
     this._lastClientX = event.touches[0].clientX
+    this._lastClientY = event.touches[0].clientY
     this._lastDeltaX = deltaX
   }
 
 
   _onTouchEnd(event) {
-    if (Math.abs(this._lastClientY - this._initialClientY) > 100)
-      return
-
-    if (Math.abs(this._lastClientX - this._initialClientX) < 50) {
-      this._position = this._initialPosition
-      this._renderSlides()
-      return
-    }
-
-    if (!this.loop && this.slideIndex !== (0 || this.children.length - 1))
-      this.slideIndex = this._lastDeltaX > 0 ?
-          Math.ceil(this._position) :
-          Math.floor(this._position)
-    else
-      this._position = this._initialPosition
-      this._renderSlides()
+    if (!this._touchThresholdMet) return
+    this.slideIndex = this._lastDeltaX > 0 ?
+        Math.ceil(this._position) :
+        Math.floor(this._position)
   }
 
 
@@ -302,6 +265,7 @@ class FXCarousel extends HTMLElement {
 
   _renderSlides() {
     const width = this.clientWidth
+    this._position = clamp(this._position, 0, this.children.length - 1)
     const pos = this._position - Math.floor(this._position)
     Array.from(this.children).forEach((slide, index) => {
       const left = this._slideOffsets[index]
@@ -325,3 +289,12 @@ class FXCarousel extends HTMLElement {
 customElements.define('fx-carousel', FXCarousel)
 
 
+
+function clamp(n, min, max) {
+  return Math.max(min, Math.min(max, n))
+}
+
+function isX(dX, dY) {
+  const angle = Math.abs(Math.atan2(dY, dX))
+  return angle < 30 * Math.PI/180 || angle > 150 * Math.PI/180
+}
