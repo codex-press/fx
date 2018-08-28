@@ -11,8 +11,6 @@ const DEFAULT_INDICATOR = 'circles'
 const BUTTONS = [ 'caret', 'circle', 'arrow', 'circle-arrow' ]
 const DEFAULT_BUTTON = 'caret'
 
-const WHEEL_DELAY = 300
-
 class FXCarousel extends HTMLElement {
 
   constructor() {
@@ -22,7 +20,7 @@ class FXCarousel extends HTMLElement {
     this.goToPrevious = this.goToPrevious.bind(this)
     this._render = this._render.bind(this)
     this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
-    this._wheelScroll = this._wheelScroll.bind(this)
+    this._onWheelEnd = this._onWheelEnd.bind(this)
 
     this._slideIndex = 0
     this._position = 0
@@ -34,18 +32,15 @@ class FXCarousel extends HTMLElement {
     this._lastClientY = undefined
     this._scrollClientX = 0
     this._initialScroll = 0
-    this._positionChange = 0
-    this._wheelEnd = debounce(
-      WHEEL_DELAY, event => { this._wheelScroll(event) }
-    )
+    this._onWheelEnd = debounce(300, this._onWheelEnd)
 
     window.addEventListener('resize', this._saveSlideOffsets)
     this.addEventListener('touchstart', this._onTouchStart)
     this.addEventListener('touchmove', this._onTouchMove)
     this.addEventListener('touchend', this._onTouchEnd)
     this.addEventListener('touchcancel', this._onTouchEnd)
-    this.addEventListener('wheel', this._onWheelEvent)
-    this.addEventListener('keydown', this._onKeyboardEvent)
+    this.addEventListener('wheel', this._onWheel)
+    this.addEventListener('keydown', this._onKeyDown)
 
     this.attachShadow({ mode: 'open' })
     this._vnode = document.createElement('div')
@@ -108,15 +103,17 @@ class FXCarousel extends HTMLElement {
 
   get slideIndex() {
     return this._slideIndex
+    // Math.round(this._position)
   }
 
 
+  // value === this._slideIndex -- position
   set slideIndex(value) {
     if (!Number.isInteger(value))
       throw TypeError('slideIndex must be an integer')
     value  = Math.max(0, Math.min(value, this.children.length - 1))
-    if (value === this._slideIndex)
-      return
+    // if (value === this._slideIndex)
+    //   return
     this._slideIndex = value
     this._render() // renders everything except the slides
     const ease = animate.cubicOut(this._position, this._slideIndex)
@@ -147,54 +144,59 @@ class FXCarousel extends HTMLElement {
   }
 
 
-  _onKeyboardEvent(event) {
-    if(event.key === 'RightArrow') this.slideIndex =+ 1
-    if(event.key === 'LeftArrow') this.slideIndex =- 1
+  _onKeyDown(event) {
+    if (event.key === 'RightArrow') this.slideIndex =+ 1
+    if (event.key === 'LeftArrow') this.slideIndex =- 1
   }
 
 
-  _wheelScroll(event) {
-    let angle = Math.abs(Math.atan2(event.deltaY, event.deltaX))
-
-    let isX = (angle < 30 * Math.PI/180 || angle > 150 * Math.PI/180)
-
-    if (isX) {
-      event.preventDefault()
-      let slideScroll = (
-        this._scrollClientX / this.clientWidth > 0 ?
-          Math.ceil(this._scrollClientX / this.clientWidth) :
-          Math.floor(this._scrollClientX / this.clientWidth)
-      )
-      const newIndex = this.slideIndex + slideScroll
-
-      if(newIndex > this.children.length - 1) {
-        this.slideIndex = this.children.length - 1
-        this._position = this.children.length - 1
-      } else if(newIndex < 0) {
-        this.slideIndex = 0
-        this._position = 0
-      }
-      else
-        this.slideIndex = newIndex
-      this._renderSlides()
-    }
-
-    this._scrollClientX = 0
-  }
-
-
-  _onWheelEvent(event) {
+  _onWheel(event) {
     // this is a scroll by lines (firefox w/ a real wheel)
     if (event.deltaMode === 1) {
       event.deltaX *= 24;
       event.deltaY *= 24;
     }
 
-    this._scrollClientX += event.deltaX
-    this._positionChange += event.deltaX / this.clientWidth
-    this._position += event.deltaX / this.clientWidth
+    let angle = Math.abs(Math.atan2(event.deltaY, event.deltaX))
+
+    let isX = (angle < 30 * Math.PI/180 || angle > 150 * Math.PI/180)
+
+    if (isX) {
+      event.preventDefault()
+      let positionMultiplier = 1
+      this._lastDeltaX = event.deltaX
+      if (this.slideIndex <= 0 && this._lastDeltaX < 0) return
+      if (this.slideIndex >= this.children.length - 1 && this._lastDeltaX > 0)
+        return
+      if (this._position < 0 || this._position > this.children.length - 1)
+        return
+      this._position += this._lastDeltaX / this.clientWidth
+      this._renderSlides()
+      this._onWheelEnd(event)
+    }
+  }
+
+
+  _onWheelEnd(event) {
+    const newIndex =(
+      this._lastDeltaX > 0 ?
+        Math.ceil(this._position) :
+        Math.floor(this._position)
+    )
+
+    if (newIndex > this.children.length - 1) {
+      this.slideIndex = this.children.length - 1
+      this._position = this.children.length - 1
+    } 
+    else if (newIndex < 0) {
+      this.slideIndex = 0
+      this._position = 0
+    }
+    else
+      this.slideIndex = newIndex
+
     this._renderSlides()
-    this._wheelEnd(event)
+    this._lastDeltaX = 0
   }
 
 
@@ -231,7 +233,7 @@ class FXCarousel extends HTMLElement {
       return
     }
 
-    if(!this.loop && this.slideIndex !== (0 || this.children.length - 1))
+    if (!this.loop && this.slideIndex !== (0 || this.children.length - 1))
       this.slideIndex = this._lastDeltaX > 0 ?
           Math.ceil(this._position) :
           Math.floor(this._position)
