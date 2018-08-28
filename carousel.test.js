@@ -707,10 +707,10 @@ describe('Carousel', () => {
     const target = document.querySelector('fx-carousel')
 
     target.dispatchEvent(new KeyboardEvent('keydown', {
-      key: 'RightArrow'
+      key: 'ArrowRight'
     }))
 
-    clock.tick(320)
+    clock.tick(500)
     assert.equal(target.slideIndex, 1, 'slideIndex is 1')
     clock.restore()
   })
@@ -720,13 +720,13 @@ describe('Carousel', () => {
     const clock = sinon.useFakeTimers()
     const target = document.querySelector('fx-carousel')
     target.slideIndex = 1
-    clock.tick(320)
+    clock.tick(500)
 
     target.dispatchEvent(new KeyboardEvent('keydown', {
-      key: 'LeftArrow'
+      key: 'ArrowLeft'
     }))
 
-    clock.tick(320)
+    clock.tick(500)
     assert.equal(target.slideIndex, 0, 'slideIndex is 0')
     clock.restore()
   })

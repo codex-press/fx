@@ -21,6 +21,8 @@ class FXCarousel extends HTMLElement {
     this._render = this._render.bind(this)
     this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
     this._onWheelEnd = debounce(400, this._onWheelEnd, this)
+    this._keyObserver = this._keyObserver.bind(this)
+    this._onKeyDown = this._onKeyDown.bind(this)
 
     this._position = 0
 
@@ -35,12 +37,12 @@ class FXCarousel extends HTMLElement {
     this.addEventListener('touchend', this._onTouchEnd)
     this.addEventListener('touchcancel', this._onTouchEnd)
     this.addEventListener('wheel', this._onWheel)
-    this.addEventListener('keydown', this._onKeyDown)
 
     this.attachShadow({ mode: 'open' })
     this._vnode = document.createElement('div')
     this.shadowRoot.appendChild(this._vnode)
     this._render()
+    this._keyObserver()
   }
 
 
@@ -101,12 +103,11 @@ class FXCarousel extends HTMLElement {
   }
 
 
-  // value === this._slideIndex -- position
   set slideIndex(value) {
     if (!Number.isInteger(value))
       throw TypeError('slideIndex must be an integer')
     value  = clamp(value, 0, this.children.length - 1)
-    if (value === this._position) return
+    if (value === this._position) return this._render()
     const ease = animate.cubicOut(this._position, value)
     if (this._timer && this._timer.active) this._timer.cancel()
     this._timer = animate.timer({
@@ -136,9 +137,27 @@ class FXCarousel extends HTMLElement {
   }
 
 
+  _keyObserver() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+          entry.isIntersecting ?
+            document.addEventListener('keydown', this._onKeyDown) :
+            document.removeEventListener('keydown', this._onKeyDown)
+        })
+    }, {
+      root: null,
+      threshold: new Array(20).fill(0).map((zero, index) => {
+        return index * 0.01
+      })
+    })
+
+    observer.observe(this)
+  }
+
+
   _onKeyDown(event) {
-    if (event.key === 'RightArrow') this.slideIndex =+ 1
-    if (event.key === 'LeftArrow') this.slideIndex =- 1
+    if (event.key === 'ArrowRight') this.slideIndex += 1
+    if (event.key === 'ArrowLeft') this.slideIndex -= 1
   }
 
 
