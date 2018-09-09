@@ -5,7 +5,9 @@ var path = require('path')
 
 function factory(emitter, fileList, config) {
 
-  config.client.codex = { files: [] }
+  config.client.codex = { }
+
+  // Set all the patterns that are { included: true } to false, but then later
 
   // Set all the patterns that are { included: true } to false, but then later
   // the adapter will use System.import to load them
@@ -23,6 +25,7 @@ function factory(emitter, fileList, config) {
       var paths = matched.map(f => f.path.slice(sliceCount))
       return files.concat(paths)
     }, [ ])
+    config.client.codex.files.unshift('/app/lib/regenerator-runtime.js')
   })
 
   config.files.unshift({

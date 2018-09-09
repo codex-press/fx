@@ -2,14 +2,17 @@
 import * as animate from '/parent/core/animate.js'
 import Snabbdom from './lib/snabbdom.js'
 import NotReact from './lib/snabbdom-pragma.js'
-import { arrows, indicators } from './carousel-icons.js'
+import icons from './icons/index.js'
 import { debounce } from '/app/src/utility.js'
+import { assetOrigin } from '/app/src/env.js'
+import * as env from '/app/src/env.js'
 
-const INDICATORS = [ 'circles', 'dashes', 'rings', 'plus' ]
-const DEFAULT_INDICATOR = 'circles'
+export const INDICATOR_TYPES = [ 'circle', 'dash' ]
+const DEFAULT_INDICATOR = 'circle'
 
-const BUTTONS = [ 'caret', 'circle', 'arrow', 'circle-arrow' ]
+export const BUTTON_TYPES = [ 'caret', 'arrow', 'hand' ]
 const DEFAULT_BUTTON = 'caret'
+
 
 class FXCarousel extends HTMLElement {
 
@@ -21,10 +24,11 @@ class FXCarousel extends HTMLElement {
     this._render = this._render.bind(this)
     this._saveSlideOffsets = this._saveSlideOffsets.bind(this)
     this._onWheelEnd = debounce(400, this._onWheelEnd, this)
-    this._keyObserver = this._keyObserver.bind(this)
     this._onKeyDown = this._onKeyDown.bind(this)
+    this._onSlotChange = this._onSlotChange.bind(this)
 
     this._position = 0
+    this._slideIndex = 0
 
     this._lastClientX = undefined
     this._lastClientY = undefined
@@ -42,7 +46,14 @@ class FXCarousel extends HTMLElement {
     this._vnode = document.createElement('div')
     this.shadowRoot.appendChild(this._vnode)
     this._render()
-    this._keyObserver()
+  
+    const observerCallback = entries => entries.forEach(entry =>
+      entry.isIntersecting ?
+        document.addEventListener('keydown', this._onKeyDown) :
+        document.removeEventListener('keydown', this._onKeyDown)
+    )
+    new IntersectionObserver(observerCallback).observe(this)
+
   }
 
 
@@ -52,7 +63,7 @@ class FXCarousel extends HTMLElement {
 
 
   static get observedAttributes() {
-    return [ 'button', 'loop', 'indicator' ]
+    return [ 'buttons', 'loop', 'indicators' ]
   }
 
 
@@ -74,40 +85,45 @@ class FXCarousel extends HTMLElement {
   }
 
 
-  get indicator() {
-    const value = this.getAttribute('indicator')
-    return INDICATORS.includes(value) ? value : DEFAULT_INDICATOR
+  get indicators() {
+    const value = this.getAttribute('indicators')
+    return INDICATOR_TYPES.includes(value) ? value : DEFAULT_INDICATOR
   }
 
 
-  set indicator(value) {
-    value = INDICATORS.includes(value) ? value : DEFAULT_INDICATOR
-    this.setAttribute('indicator', value)
+  set indicators(value) {
+    value = INDICATOR_TYPES.includes(value) ? value : DEFAULT_INDICATOR
+    this.setAttribute('indicators', value)
   }
 
 
-  get button() {
-    const value = this.getAttribute('button')
-    return BUTTONS.includes(value) ? value : DEFAULT_BUTTON
+  get buttons() {
+    const value = this.getAttribute('buttons')
+    return BUTTON_TYPES.includes(value) ? value : DEFAULT_BUTTON
   }
 
 
-  set button(value) {
-    value = BUTTONS.includes(value) ? value : DEFAULT_BUTTON
-    this.setAttribute('button', value)
+  set buttons(value) {
+    value = BUTTON_TYPES.includes(value) ? value : DEFAULT_BUTTON
+    this.setAttribute('buttons', value)
   }
 
 
   get slideIndex() {
-    return Math.round(this._position)
+    return this._slideIndex
   }
 
 
   set slideIndex(value) {
     if (!Number.isInteger(value))
       throw TypeError('slideIndex must be an integer')
+
     value  = clamp(value, 0, this.children.length - 1)
-    if (value === this._position) return this._render()
+    this._slideIndex = value
+    this._render()
+
+    // animate the slide positions
+    if (value === this._position) return
     const ease = animate.cubicOut(this._position, value)
     if (this._timer && this._timer.active) this._timer.cancel()
     this._timer = animate.timer({
@@ -116,7 +132,7 @@ class FXCarousel extends HTMLElement {
         this._position = ease(time)
         this._renderSlides()
       },
-      done: () => this._render()
+      done: this._render,
     })
   }
 
@@ -134,24 +150,6 @@ class FXCarousel extends HTMLElement {
       this.slideIndex = this.children.length - 1
     else
       this.slideIndex -= 1
-  }
-
-
-  _keyObserver() {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-          entry.isIntersecting ?
-            document.addEventListener('keydown', this._onKeyDown) :
-            document.removeEventListener('keydown', this._onKeyDown)
-        })
-    }, {
-      root: null,
-      threshold: new Array(20).fill(0).map((zero, index) => {
-        return index * 0.01
-      })
-    })
-
-    observer.observe(this)
   }
 
 
@@ -225,12 +223,17 @@ class FXCarousel extends HTMLElement {
   }
 
 
+  _onSlotChange(event) {
+    this._render()
+    this._saveSlideOffsets() 
+  }
+
+
   _render() {
-    const { loop, button, indicator, slideIndex, children } = this
-    const previousIcon = arrows[button + 'Previous']
-    const nextIcon = arrows[button + 'Next']
-    const activeIcon = indicators[indicator + 'Active']
-    const inactiveIcon = indicators[indicator + 'Inactive']
+    const { loop, buttons, indicators, slideIndex, children } = this
+    const previousIcon = icons[buttons + '-left']
+    const nextIcon = icons[buttons + '-right']
+    const indicatorIcon = icons[indicators]
 
     this._vnode = Snabbdom.patch(
       this._vnode,
@@ -238,7 +241,7 @@ class FXCarousel extends HTMLElement {
 
         <link
           rel="stylesheet"
-          href="/fx/carousel.css"
+          href={ assetOrigin + '/fx/carousel.shadow.css' }
           on-load={ this._saveSlideOffsets }
         />
 
@@ -259,14 +262,15 @@ class FXCarousel extends HTMLElement {
         <div className="slide-indicator">
           { Array.from(children).map((el, i) => 
             <div
+              class-active={ this.slideIndex === i }
               on-click={ () => this.slideIndex = i }
-              props-innerHTML={ i === slideIndex ? activeIcon : inactiveIcon }
+              props-innerHTML={ indicatorIcon }
             />)
           }
         </div>
 
         <div className="strip">
-          <slot on-slotchange={ this._render }></slot>
+          <slot on-slotchange={ this._onSlotChange }></slot>
         </div>
 
       </div>
@@ -276,8 +280,8 @@ class FXCarousel extends HTMLElement {
 
 
   _saveSlideOffsets() {
-    this._slideOffsets = Array.from(this.children)
-      .map(slide => Math.max(0, slide.offsetLeft))
+    this._slideOffsets = Array.from(this.children).map(s => s.offsetLeft)
+    this._slideWidths = Array.from(this.children).map(s => s.clientWidth)
     this._renderSlides()
   }
 
@@ -287,7 +291,8 @@ class FXCarousel extends HTMLElement {
     this._position = clamp(this._position, 0, this.children.length - 1)
     const pos = this._position - Math.floor(this._position)
     Array.from(this.children).forEach((slide, index) => {
-      const left = this._slideOffsets[index]
+      const offset = (width - this._slideWidths[index]) / 2
+      const left = this._slideOffsets[index] - offset
       let x
       if (index == this._position)
         x = - left + 'px'

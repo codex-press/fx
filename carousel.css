@@ -1,65 +1,22 @@
-:host {
+
+fx-carousel {
+  display: flex;
+  flex-flow: row nowrap;
   position: relative;
-  display: block;
   overflow: hidden;
 }
 
-:root {
-  --button-color: white;
-  --indicator-color: white;
-}
-
-.strip {
-  position: relative;
-  display: flex;
-  flex-flow: row nowrap;
-}
-
-::slotted(*) {
+fx-carousel > * {
   flex: 0 0 100%;
   margin: 0;
   will-change: transform;
 }
 
-.previous-slide, .next-slide {
-  display: flex;
-  position: absolute;
-  z-index: 10;
-  width: 100px;
-  height: 100%;
-  align-items: center;
-  cursor: pointer;
+html:not(.javascript) fx-carousel {
+  display: block;
 }
 
-.previous-slide svg path,
-.next-slide svg path {
-  fill: var(--button-color, white);
-}
-
-.previous-slide[hidden], .next-slide[hidden] {
-  display: none;
-}
-
-.next-slide {
-  right: 0;
-  justify-content: flex-end;
-}
-
-.slide-indicator {
-  display: flex;
-  position: absolute;
-  z-index: 10;
-  justify-content: center;
-  align-self: flex-end;
-  bottom: 10%;
-  width: 100vw;
-}
-
-.slide-indicator svg {
-  margin: 0 0.5rem;
-  cursor: pointer;
-}
-
-.slide-indicator svg path {
-  fill: var(--indicator-color, white);
+html:not(.javascript) fx-carousel > * {
+  width: 100%;
+  margin: 0;
 }

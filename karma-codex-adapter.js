@@ -1,8 +1,10 @@
 
-// XXX quick fix for loading CSS
-var base = document.createElement('base')
-base.href = 'http://localhost:8000/'
-document.head.appendChild(base)
+
+document.head.insertAdjacentHTML('beforeend', `
+  <meta name="codex:content_origin" content="https://usercontent.codex.press">
+  <meta name="codex:asset_origin" content="http://localhost:8000">
+  <meta name="codex:env" content="test">
+`)
 
 var loader = new SystemRegisterLoader()
 
